@@ -14,32 +14,14 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
-    [Header("Actions")]
+    [Header("Actions")]   
     [SerializeField]
-    private MovementActions sprintAction;
-    public MovementActions SprintAction
+    private MovementActions rollAction;
+    public MovementActions RollAction
     {
         get
         {
-            return sprintAction;
-        }
-    }
-    [SerializeField]
-    private MovementActions slowRollAction;
-    public MovementActions SlowRollAction
-    {
-        get
-        {
-            return slowRollAction;
-        }
-    }
-    [SerializeField]
-    private MovementActions fastRollAction;
-    public MovementActions FastRolLAction
-    {
-        get
-        {
-            return fastRollAction;
+            return rollAction;
         }
     }
 
@@ -113,13 +95,11 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     //States - Movement
     [HideInInspector] public PCIdleState idleState;
-    [HideInInspector] public PCWalkState walkState;
-    [HideInInspector] public PCSprintState sprintState;
-    [HideInInspector] public PCSlowRollState slowRollState;
-    [HideInInspector] public PCFastRollState fastRollState;
-
-	//States - Weapon
-	[HideInInspector] public PCStandardAttackState standardAttackState;
+    [HideInInspector] public PCBlockIdleState blockIdleState;
+    [HideInInspector] public PCMoveState moveState;
+    [HideInInspector] public PCBlockMoveState blockMoveState;
+    [HideInInspector] public PCRollState rollState;  
+	
 
     //Inputs =========================================================================
     //Movement
@@ -129,6 +109,15 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         get
         {
             return movementVector;
+        }
+    }
+
+    private bool isBlocking;
+    public bool IsBlocking
+    {
+        get
+        {
+            return isBlocking;
         }
     }
 
@@ -165,13 +154,10 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
         //Get States - Movement
         idleState = new PCIdleState(this);
-        walkState = new PCWalkState(this);
-        sprintState = new PCSprintState(this);
-        slowRollState = new PCSlowRollState(this);
-        fastRollState = new PCFastRollState(this);
-
-		//Get States - Combat
-		standardAttackState = new PCStandardAttackState(this);
+        blockIdleState = new PCBlockIdleState(this);
+        moveState = new PCMoveState(this);
+        rollState = new PCRollState(this);
+        blockMoveState = new PCBlockMoveState(this);  
         
         //Set Starting State
         currentState = idleState;
@@ -191,10 +177,10 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
         //Set Up New Animation Clips - Movement
 		overrideController["Idle"] = newWeapon.MovementAnimation.idleAnim.clip;
-		overrideController["Jog"] = newWeapon.MovementAnimation.walkAnim.clip;
-		overrideController["Sprint"] = newWeapon.MovementAnimation.runAnim.clip;
-		overrideController["SlowRoll"] = newWeapon.MovementAnimation.slowRollAnim.clip;
-		overrideController["FastRoll"] = newWeapon.MovementAnimation.fastRollAnim.clip;
+		//overrideController["Jog"] = newWeapon.MovementAnimation.walkAnim.clip;
+		overrideController["Move"] = newWeapon.MovementAnimation.runAnim.clip;
+		//overrideController["SlowRoll"] = newWeapon.MovementAnimation.slowRollAnim.clip;
+		overrideController["Roll"] = newWeapon.MovementAnimation.fastRollAnim.clip;
 
 		//Set up New Animation Clips - Weapons
 		//overrideController["Attack1"] = newWeapon.WeaponAnimation.attackOneAnim.clip;
@@ -325,15 +311,18 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
             isRolling = false;
         }
 
-        //Get Sprint Input
-        if(Input.GetMouseButton(1))
+        //Get Block Input
+        if(hasShield)
         {
-            isSprinting = true;
-        }
-        else
-        {
-            isSprinting = false;
-        }
+            if (Input.GetMouseButton(1))
+            {
+                isBlocking = true;
+            }
+            else
+            {
+                isBlocking = false;
+            }
+        }        
 
         //Get Directional Movement
         float x = Input.GetAxis("Horizontal");

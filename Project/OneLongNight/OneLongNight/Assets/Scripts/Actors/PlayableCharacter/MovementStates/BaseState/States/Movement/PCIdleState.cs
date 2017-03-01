@@ -21,43 +21,34 @@ public class PCIdleState : IPlayableCharacterState
         if(player.IsRolling)
         {
             //Check We Have Enough Stamina
-            if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.SlowRollAction.ActionCost))
+            if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.RollAction.ActionCost))
             {
                 player.PCAnimator.SetBool("isRolling", true);
-                OnExitState(player.slowRollState);
+                OnExitState(player.rollState);
             }
-        }
-
-        //Check for Attack
-        if(player.IsTryingToAttack)
-        {
-			OnExitState(player.standardAttackState);
         }
 
         //Check for Movement
-        if(player.MovementVector != Vector3.zero)
+        if (player.MovementVector != Vector3.zero)
         {
-            //Check for Sprinting
-            if(player.IsSprinting)
+            if(player.IsBlocking)
             {
-                //Check if Player has Enough Stamina
-                if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.SprintAction.ActionCost))
-                {
-                    //Move to Sprint State
-                    OnExitState(player.sprintState);
-
-                }
-                else //Move to Walking State
-                {
-                    OnExitState(player.walkState);
-                }
-
+                player.PCAnimator.SetBool("isBlocking", true);
+                OnExitState(player.blockMoveState);
             }
-            else //Move to Walking State
+            else
             {
-                OnExitState(player.walkState);
+                OnExitState(player.moveState);
             }
-                        
+            
+        }
+        else
+        {
+            if(player.IsBlocking)
+            {
+                player.PCAnimator.SetBool("isBlocking", true);
+                OnExitState(player.blockIdleState);
+            }
         }
     }
 

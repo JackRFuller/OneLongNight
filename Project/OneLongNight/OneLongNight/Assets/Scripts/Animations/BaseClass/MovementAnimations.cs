@@ -7,6 +7,7 @@ public class MovementAnimations : ScriptableObject
 {
 	public AnimationClipData idleAnim;
 	public AnimationClipData walkAnim;
+    public AnimationClipData blockWalkAnim;
 	public AnimationClipData runAnim;
 	public AnimationClipData shieldRunAnim;
 	public AnimationClipData slowRollAnim;
