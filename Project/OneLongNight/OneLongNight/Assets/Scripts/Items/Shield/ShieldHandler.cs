@@ -5,6 +5,16 @@ using UnityEngine;
 public class ShieldHandler : MonoBehaviour
 {
     [SerializeField]
+    private Sprite shieldIcon;
+    public Sprite ShieldIcon
+    {
+        get
+        {
+            return shieldIcon;
+        }
+    }
+
+    [SerializeField]
     private Collider shieldCollider;
 
     [SerializeField]
@@ -22,15 +32,16 @@ public class ShieldHandler : MonoBehaviour
         if(other.tag.Equals("Player"))
         {
             StatePatternPlayableCharacter.Shield = this;
+            EventManager.TriggerEvent(Events.HitShieldPickup);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Player"))
-        {
-            
+        {            
             StatePatternPlayableCharacter.Shield = null;
+            EventManager.TriggerEvent(Events.ExitItemPickup);
         }
     }
 }

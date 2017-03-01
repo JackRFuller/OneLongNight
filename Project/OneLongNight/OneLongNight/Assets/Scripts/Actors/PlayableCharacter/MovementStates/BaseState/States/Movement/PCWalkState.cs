@@ -47,7 +47,8 @@ public class PCWalkState : IPlayableCharacterState
                 //Check that we're not currently rolling
                 AnimatorStateInfo currentState = player.PCAnimator.GetCurrentAnimatorStateInfo(0);
 
-                player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+                if (currentState.fullPathHash == Animator.StringToHash("Base Layer.Jog"))
+                    player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
             }
             else //Transition to Idle State
             {

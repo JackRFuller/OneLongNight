@@ -67,7 +67,8 @@ public class PCSprintState : IPlayableCharacterState
                         //Check that we're not currently rolling
                         AnimatorStateInfo currentState = player.PCAnimator.GetCurrentAnimatorStateInfo(0);
 
-                       player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+                        if(currentState.fullPathHash == Animator.StringToHash("Base Layer.Sprint"))
+                            player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
                     }
                     else
                     {

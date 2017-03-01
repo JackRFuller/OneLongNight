@@ -61,6 +61,7 @@ public class WeaponPickup : BaseMonoBehaviour
         if(other.tag.Equals("Player"))
         {
             StatePatternPlayableCharacter.WeaponPickUp = this;
+            EventManager.TriggerEvent(Events.HitWeaponPickup);
         }
     }
 
@@ -69,6 +70,7 @@ public class WeaponPickup : BaseMonoBehaviour
         if(other.tag.Equals("Player"))
         {
             StatePatternPlayableCharacter.WeaponPickUp = null;
+            EventManager.TriggerEvent(Events.ExitItemPickup);
         }
     }
 

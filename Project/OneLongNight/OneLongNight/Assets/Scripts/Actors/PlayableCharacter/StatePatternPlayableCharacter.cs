@@ -233,6 +233,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         shieldObject.SetActive(true);
 
         shield = null;
+
+        EventManager.TriggerEvent(Events.ExitItemPickup);
     }
     
     void GetWeapon()
@@ -246,6 +248,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 		OverrideAnimationClips(currentWeapon);
 
         weaponPickup = null;
+
+        EventManager.TriggerEvent(Events.ExitItemPickup);
     }
 
     public override void UpdateNormal()
