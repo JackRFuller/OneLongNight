@@ -24,6 +24,7 @@ public class PCSprintState : IPlayableCharacterState
             //Check we have enough stamina for movement
             if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.FastRolLAction.ActionCost))
             {
+                
                 player.PCAnimator.SetBool("isRolling", true);
                 OnExitState(player.fastRollState);
             }
@@ -60,6 +61,9 @@ public class PCSprintState : IPlayableCharacterState
                     //Check We Have Enough Stamina
                     if (PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.SprintAction.ActionCost))
                     {
+                        //Remove Stamina
+                        PCAttributes.Instance.RemoveStamina(player.SprintAction.ActionCost);
+
                         player.PCAnimator.SetBool("isSprinting", true);
                         player.PCAnimator.SetInteger("Movement", 1);
 

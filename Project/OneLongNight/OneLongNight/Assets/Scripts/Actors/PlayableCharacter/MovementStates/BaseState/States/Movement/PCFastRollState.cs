@@ -13,7 +13,7 @@ public class PCFastRollState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-
+     
     }
 
     public void OnUpdateState()
@@ -57,6 +57,7 @@ public class PCFastRollState : IPlayableCharacterState
 
     public void OnExitState(IPlayableCharacterState newState)
     {
+        PCAttributes.Instance.RemoveStamina(player.FastRolLAction.ActionCost);
         player.PCAnimator.SetBool("isRolling", false);
         player.CurrentState = newState;
     }

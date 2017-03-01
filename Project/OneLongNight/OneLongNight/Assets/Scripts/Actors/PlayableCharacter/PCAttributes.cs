@@ -15,9 +15,29 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         }
     }
 
+    private IEnumerator cooldownRoutine;
+
+    private bool isRegeneratingStamina;
+
+    [Header("Stamina Attributes")]
+    [SerializeField]
+    private float staminaRegenRate = 10.0f;
+
     private void Start()
     {
         pcStamina = startingPCStamina;
+        cooldownRoutine = CooldownToStartStaminaRegneration();
+    }
+
+    public void RemoveStamina(float amount)
+    {
+        pcStamina -= amount;
+        Debug.Log("Stamina Amount " + pcStamina);
+        isRegeneratingStamina = false;
+
+        StopCoroutine(cooldownRoutine);
+        cooldownRoutine = CooldownToStartStaminaRegneration();
+        StartCoroutine(cooldownRoutine);
     }
 
     public bool CheckIfPCHasEnoughStamina(float cost)
@@ -26,5 +46,27 @@ public class PCAttributes : MonoSingleton<PCAttributes>
             return true;
         else
             return false;
+    }
+
+
+    IEnumerator CooldownToStartStaminaRegneration()
+    {
+        yield return new WaitForSeconds(1.0f);
+        isRegeneratingStamina = true;
+    }
+
+    private void Update()
+    {
+        if (isRegeneratingStamina)
+            RegenerateStamina();
+    }
+
+    private void RegenerateStamina()
+    {
+        pcStamina += staminaRegenRate * Time.deltaTime;
+        if(pcStamina >= 100.0f)
+        {
+            isRegeneratingStamina = false;
+        }
     }
 }

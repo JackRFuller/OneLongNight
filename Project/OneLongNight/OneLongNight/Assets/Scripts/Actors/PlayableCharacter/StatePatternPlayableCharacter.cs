@@ -247,9 +247,12 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
 		OverrideAnimationClips(currentWeapon);
 
+        EventManager.TriggerEvent(Events.ChnagedWeapon);
+        EventManager.TriggerEvent(Events.ExitItemPickup);       
+
         weaponPickup = null;
 
-        EventManager.TriggerEvent(Events.ExitItemPickup);
+       
     }
 
     public override void UpdateNormal()
