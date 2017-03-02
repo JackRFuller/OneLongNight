@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class PlayerUICanvasHandler : BaseMonoBehaviour
 {
+    [Header("Shield UI Elements")]
+    [SerializeField]
+    private Image shieldImage;
+
+    [Header("Weapon UI Elements")]
     [SerializeField]
     private Image weaponImage;
 

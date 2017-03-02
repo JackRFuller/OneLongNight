@@ -25,6 +25,12 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
+    //Item Pickups================================================================
+    [Header("Items")]
+    [SerializeField]
+    private PCItemPickupHandler itemHandler; //Cycles through all of the logic for picking up and placing items
+    public static ItemPickup item;    
+
     //Weapons========================================================================
     [Header("Weapons")]
     [SerializeField]
@@ -73,6 +79,10 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         get
         {
             return hasShield;
+        }
+        set
+        {
+            hasShield = value;
         }
     }
 
@@ -213,8 +223,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     {
         shield.PickUpItem();
         
-        hasShield = true;
-        pcAnimator.SetBool("hasShield", true);
+        hasShield = true;        
 
         shieldObject.SetActive(true);
 
@@ -279,11 +288,14 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //PickUp
         if(Input.GetKeyDown(KeyCode.E))
         {
-            if (shield)
-                SetShield();
+            if (item)
+                itemHandler.PickUpItem(item.Item);
 
-            if (weaponPickup)
-                GetWeapon();
+            //if (shield)
+            //    SetShield();
+
+            //if (weaponPickup)
+            //    GetWeapon();
         }
 
 

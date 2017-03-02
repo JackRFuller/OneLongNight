@@ -15,17 +15,13 @@ public class PlayerInstructionCanvasHandler : BaseMonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.StartListening(Events.HitShieldPickup, SetShieldIcon);
-        EventManager.StartListening(Events.HitWeaponPickup, SetWeaponIcon);
-
+        EventManager.StartListening(Events.HitItemPickup, SetItemIcon);
         EventManager.StartListening(Events.ExitItemPickup, TurnOffPickup);
     }
 
     private void OnDisable()
     {
-        EventManager.StopListening(Events.HitShieldPickup, SetShieldIcon);
-        EventManager.StopListening(Events.HitWeaponPickup, SetWeaponIcon);
-
+        EventManager.StopListening(Events.HitItemPickup, SetItemIcon);
         EventManager.StopListening(Events.ExitItemPickup, TurnOffPickup);
     }
 
@@ -57,19 +53,9 @@ public class PlayerInstructionCanvasHandler : BaseMonoBehaviour
         pickupObj.SetActive(false);
     }
 
-    private void SetShieldIcon()
+    private void SetItemIcon()
     {
-        pickupIcon.sprite = StatePatternPlayableCharacter.Shield.ShieldIcon;
-
+        pickupIcon.sprite = StatePatternPlayableCharacter.item.Item.itemIcon;
         TurnOnPickUp();
     }
-
-    private void SetWeaponIcon()
-    {
-        pickupIcon.sprite = StatePatternPlayableCharacter.WeaponPickUp.Weapon.WeaponIcon;
-
-        TurnOnPickUp();
-    }
-
-
 }
