@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PCItemPickupHandler : BaseMonoBehaviour
+public class PCItemInventoryHandler : BaseMonoBehaviour
 {
     private StatePatternPlayableCharacter player;
     private ItemData item;
@@ -11,6 +11,14 @@ public class PCItemPickupHandler : BaseMonoBehaviour
     [SerializeField]
     private GameObject[] shields;
     private int currentShieldIndex;
+    private static float shieldDurability;
+    public static float ShieldDurability
+    {
+        get
+        {
+            return shieldDurability;
+        }
+    }
 
     [Header("Weapons")]
     private GameObject[] weapons;
@@ -45,6 +53,9 @@ public class PCItemPickupHandler : BaseMonoBehaviour
     //If Item is a Weapon
     private void PickUpWeapon()
     {
+        //Check if we already have a weapon
+
+
         //Check if it's two handed
 
         //If it is then drop the shield
@@ -70,19 +81,29 @@ public class PCItemPickupHandler : BaseMonoBehaviour
             //Turn off Current Shield
             shields[currentShieldIndex].SetActive(false);
 
-            //Get New Shield
+            //Drop Current Shield
             GameObject droppedShield = ItemManager.Instance.GetShield(currentShieldIndex);
 
             droppedShield.transform.position = new Vector3(this.transform.position.x,
                                                            1.0f,
                                                            this.transform.position.z);
             droppedShield.SetActive(true);
+
+            //Set Old Shield Durability
+            droppedShield.GetComponent<ItemPickup>().ItemDurability = shieldDurability; 
         }
 
         currentShieldIndex = item.shieldIndex;
         shields[currentShieldIndex].SetActive(true);
         player.HasShield = true;
 
+        //Set Shield Durability
+        shieldDurability = StatePatternPlayableCharacter.item.ItemDurability;
+
+        //Trigger UI Change
+        EventManager.TriggerEvent(Events.NewShieldPickup);
+
+        
         StatePatternPlayableCharacter.item.GetItem();
     }
 }

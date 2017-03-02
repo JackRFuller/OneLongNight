@@ -6,11 +6,11 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     public ItemType itemType;
-    public Sprite itemIcon;
-    public GameObject itemPrefab;
+    public Sprite itemIcon;   
 
     [Header("If Weapon")]
     public WeaponType weaponType;
+    public int weaponIndex;
 
     [Header("If Shield")]
     public int shieldIndex;

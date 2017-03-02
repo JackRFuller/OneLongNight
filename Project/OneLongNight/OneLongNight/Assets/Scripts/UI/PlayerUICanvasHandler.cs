@@ -8,10 +8,12 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
     [Header("Shield UI Elements")]
     [SerializeField]
     private Image shieldImage;
+    [SerializeField]
+    private Image shieldDurabilityBar;
 
     [Header("Weapon UI Elements")]
     [SerializeField]
-    private Image weaponImage;
+    private Image weaponImage;   
 
     [Header("Stamina UI Elements")]
     [SerializeField]
@@ -19,12 +21,22 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.StartListening(Events.ChnagedWeapon, ChangeWeaponImage);
+        EventManager.StartListening(Events.NewShieldPickup, ChangedShield);
     }
 
     private void OnDisable()
     {
-        EventManager.StopListening(Events.ChnagedWeapon, ChangeWeaponImage);
+        EventManager.StopListening(Events.NewShieldPickup, ChangedShield);
+    }
+
+    private void ChangedShield()
+    {
+        //Change Image
+        shieldImage.sprite = StatePatternPlayableCharacter.item.Item.itemIcon;
+        //Change Durability
+        float currentDurability = PCItemInventoryHandler.ShieldDurability;        
+        float fillAmount = currentDurability * 0.01f;        
+        shieldDurabilityBar.fillAmount = fillAmount;
     }
 
     private void ChangeWeaponImage()

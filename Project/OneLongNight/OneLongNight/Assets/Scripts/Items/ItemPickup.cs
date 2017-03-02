@@ -44,6 +44,7 @@ public class ItemPickup : BaseMonoBehaviour
 
         EventManager.TriggerEvent(Events.ExitItemPickup);
         this.gameObject.SetActive(false);
+        StatePatternPlayableCharacter.item = null;
     }
 
     private void OnTriggerEnter(Collider other)

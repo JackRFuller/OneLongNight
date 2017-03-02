@@ -28,7 +28,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     //Item Pickups================================================================
     [Header("Items")]
     [SerializeField]
-    private PCItemPickupHandler itemHandler; //Cycles through all of the logic for picking up and placing items
+    private PCItemInventoryHandler itemHandler; //Cycles through all of the logic for picking up and placing items
     public static ItemPickup item;    
 
     //Weapons========================================================================
@@ -57,22 +57,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
             weaponPickup = value;
         }
     }
-
-    [Header("Shields")]
-    [SerializeField]
-    private GameObject shieldObject;
-    private static ShieldHandler shield;
-    public static ShieldHandler Shield
-    {
-        get
-        {
-            return shield;
-        }
-        set
-        {
-            shield = value;
-        }
-    }
+    
     private bool hasShield;
     public bool HasShield
     {
@@ -108,8 +93,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     [HideInInspector] public PCBlockIdleState blockIdleState;
     [HideInInspector] public PCMoveState moveState;
     [HideInInspector] public PCBlockMoveState blockMoveState;
-    [HideInInspector] public PCRollState rollState;  
-	
+    [HideInInspector] public PCRollState rollState;  	
 
     //Inputs =========================================================================
     //Movement
@@ -214,24 +198,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
         return controller;
     }
-
-    /// <summary>
-    /// Pickups Shield
-    /// Shield Variable is set in ShieldHandler
-    /// </summary>
-    void SetShield()
-    {
-        shield.PickUpItem();
-        
-        hasShield = true;        
-
-        shieldObject.SetActive(true);
-
-        shield = null;
-
-        EventManager.TriggerEvent(Events.ExitItemPickup);
-    }
-    
+       
     void GetWeapon()
     {
         currentWeapon = weaponPickup.Weapon;
@@ -241,13 +208,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         weapons[weaponPickup.WeaponIndex].SetActive(true);
 
 		OverrideAnimationClips(currentWeapon);
-
-        EventManager.TriggerEvent(Events.ChnagedWeapon);
-        EventManager.TriggerEvent(Events.ExitItemPickup);       
-
         weaponPickup = null;
-
-       
     }
 
     public override void UpdateNormal()
@@ -290,12 +251,6 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         {
             if (item)
                 itemHandler.PickUpItem(item.Item);
-
-            //if (shield)
-            //    SetShield();
-
-            //if (weaponPickup)
-            //    GetWeapon();
         }
 
 
