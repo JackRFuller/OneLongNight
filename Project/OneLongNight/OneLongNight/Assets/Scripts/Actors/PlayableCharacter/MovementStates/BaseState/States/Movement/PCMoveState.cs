@@ -17,6 +17,13 @@ public class PCMoveState : IPlayableCharacterState
 
     public void OnUpdateState()
     {
+        //Check if We're Picking Up Items
+        if(player.IsPickingUp)
+        {
+            player.PCAnimator.SetBool("isPickingUp", true);
+            OnExitState(player.pickUpState);
+        }
+
         //Check if Player is Rolling
         if(player.IsRolling)
         {

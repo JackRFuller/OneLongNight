@@ -28,14 +28,9 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     //Item Pickups================================================================
     [Header("Items")]
     [SerializeField]
-    private PCItemInventoryHandler itemHandler; //Cycles through all of the logic for picking up and placing items
-        
+    private PCItemInventoryHandler itemHandler; //Cycles through all of the logic for picking up and placing items        
 
-    //Weapons========================================================================
-    [Header("Weapons")]
-    [SerializeField]
-    private WeaponData startingWeapon;    
-    
+    //Weapons======================================================================== 
     private bool hasShield;
     public bool HasShield
     {
@@ -71,7 +66,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     [HideInInspector] public PCBlockIdleState blockIdleState;
     [HideInInspector] public PCMoveState moveState;
     [HideInInspector] public PCBlockMoveState blockMoveState;
-    [HideInInspector] public PCRollState rollState;  	
+    [HideInInspector] public PCRollState rollState;
+    [HideInInspector] public PCPickupState pickUpState;
 
     //Inputs =========================================================================
     //Movement
@@ -91,16 +87,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         {
             return isBlocking;
         }
-    }
-
-    private bool isSprinting;
-    public bool IsSprinting
-    {
-        get
-        {
-            return isSprinting;
-        }
-    }
+    }    
 
     private bool isRolling;
     public bool IsRolling
@@ -120,6 +107,15 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
+    private bool isPickingUp;
+    public bool IsPickingUp
+    {
+        get
+        {
+            return isPickingUp;
+        }
+    }
+
     private void Start()
     {
         pcAnimator = this.GetComponent<Animator>();
@@ -129,53 +125,12 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         blockIdleState = new PCBlockIdleState(this);
         moveState = new PCMoveState(this);
         rollState = new PCRollState(this);
-        blockMoveState = new PCBlockMoveState(this);  
+        blockMoveState = new PCBlockMoveState(this);
+        pickUpState = new PCPickupState(this);
         
         //Set Starting State
         currentState = idleState;
-
-		OverrideAnimationClips(startingWeapon);
     }
-
-   
-
-    //Takes New Weapon and Sets Up New Animations
-    private void OverrideAnimationClips(WeaponData newWeapon)
-    {
-        Animator animator = GetComponent<Animator>();
-
-        AnimatorOverrideController overrideController = new AnimatorOverrideController();
-        overrideController.runtimeAnimatorController = GetEffectiveController(animator);
-
-        //Set Up New Animation Clips - Movement
-		overrideController["Idle"] = newWeapon.MovementAnimation.idleAnim.clip;
-		//overrideController["Jog"] = newWeapon.MovementAnimation.walkAnim.clip;
-		overrideController["Move"] = newWeapon.MovementAnimation.walkAnim.clip;
-		//overrideController["SlowRoll"] = newWeapon.MovementAnimation.slowRollAnim.clip;
-		overrideController["Roll"] = newWeapon.MovementAnimation.fastRollAnim.clip;
-
-		//Set up New Animation Clips - Weapons
-		//overrideController["Attack1"] = newWeapon.WeaponAnimation.attackOneAnim.clip;
-		//overrideController["Attack2"] = newWeapon.WeaponAnimation.attackTwoAnim.clip;
-		//overrideController["Attack3"] = newWeapon.WeaponAnimation.attackThreeAnim.clip;
-
-        animator.runtimeAnimatorController = overrideController;        
-    }
-
-    //Create New Animator
-    private RuntimeAnimatorController GetEffectiveController(Animator animator)
-    {
-        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
-
-        AnimatorOverrideController overrideController = controller as AnimatorOverrideController;
-        while (overrideController != null)
-        {
-            controller = overrideController.runtimeAnimatorController;
-            overrideController = controller as AnimatorOverrideController;
-        }
-
-        return controller;
-    }           
 
     public override void UpdateNormal()
     {
@@ -212,11 +167,21 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     private void GetInputs()
     {
-        //PickUp
-        if(Input.GetKeyDown(KeyCode.E))
+        //Get Pickup Input
+        if(Input.GetKey(KeyCode.E))
         {
-            if (PCItemInventoryHandler.foundItem)
-                itemHandler.PickUpItem();
+            if(PCItemInventoryHandler.PickUpFinished)
+            {
+                if (PCItemInventoryHandler.foundItem)
+                {
+                    isPickingUp = true;
+                    itemHandler.PickUpItem();
+                }
+            }
+        }
+        else
+        {
+            isPickingUp = false;
         }
 
 

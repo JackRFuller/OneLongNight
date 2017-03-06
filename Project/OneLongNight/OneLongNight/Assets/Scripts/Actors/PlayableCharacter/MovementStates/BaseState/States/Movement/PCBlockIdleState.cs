@@ -17,6 +17,14 @@ public class PCBlockIdleState : IPlayableCharacterState
 
     public void OnUpdateState()
     {
+        //Check if We're Picking Up Items
+        if (player.IsPickingUp)
+        {
+            player.PCAnimator.SetBool("isPickingUp", true);
+            OnExitState(player.pickUpState);
+        }
+
+
         //Check For Roll
         if (player.IsRolling)
         {
@@ -49,6 +57,10 @@ public class PCBlockIdleState : IPlayableCharacterState
             {
                 player.PCAnimator.SetBool("isBlocking", false);
                 OnExitState(player.idleState);
+            }
+            else
+            {
+                OnExitState(player.blockIdleState);
             }
         }
     }

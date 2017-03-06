@@ -47,6 +47,18 @@ public class ItemPickup : BaseMonoBehaviour
         PCItemInventoryHandler.foundItem = null;
     }
 
+    public void ReactivateItem()
+    {
+        this.GetComponent<Collider>().enabled = false;
+        StartCoroutine(TurnOnCollider());
+    }
+
+    IEnumerator TurnOnCollider()
+    {
+        yield return new WaitForSeconds(2f);
+        this.GetComponent<Collider>().enabled = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))

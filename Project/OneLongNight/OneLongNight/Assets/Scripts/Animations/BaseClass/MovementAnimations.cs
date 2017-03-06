@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Movement Animation", menuName = "Scriptable Object/Movement Anims", order = 1)]
 public class MovementAnimations : ScriptableObject
 {
+    //Movement
 	public AnimationClipData idleAnim;
-	public AnimationClipData walkAnim;
-    public AnimationClipData blockWalkAnim;
-	public AnimationClipData runAnim;
-	public AnimationClipData shieldRunAnim;
-	public AnimationClipData slowRollAnim;
-	public AnimationClipData fastRollAnim;
+    public AnimationClipData moveAnim;
+    public AnimationClipData rollAnim;
+
+    public AnimationClipData blockingMoveAnim;
+    public AnimationClipData blockingIdle;
 }

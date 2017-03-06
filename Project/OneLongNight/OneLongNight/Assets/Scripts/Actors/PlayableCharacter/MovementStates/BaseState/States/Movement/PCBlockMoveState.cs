@@ -28,8 +28,16 @@ public class PCBlockMoveState : IPlayableCharacterState
         }
         else
         {
+            //Check if We're Picking Up Items
+            if (player.IsPickingUp)
+            {
+                player.PCAnimator.SetBool("isPickingUp", true);
+                OnExitState(player.pickUpState);
+            }
+
+
             //Check for Movement
-            if(player.MovementVector != Vector3.zero)
+            if (player.MovementVector != Vector3.zero)
             {
                 //Check that we're not currently rolling
                 AnimatorStateInfo currentState = player.PCAnimator.GetCurrentAnimatorStateInfo(0);
@@ -45,9 +53,21 @@ public class PCBlockMoveState : IPlayableCharacterState
                 }
 
                 player.PCAnimator.SetInteger("Movement", 1);
+            }
+            else
+            {
+                if (!player.IsBlocking)
+                {
+                    player.PCAnimator.SetBool("isBlocking", false);
+                    OnExitState(player.idleState);
+                }
+                else
+                {
+                    player.PCAnimator.SetBool("isBlocking", true);
+                    OnExitState(player.blockIdleState);
+                }
 
-
-                
+                player.PCAnimator.SetInteger("Movement", 0);
             }
         }
     }

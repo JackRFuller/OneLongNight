@@ -5,6 +5,8 @@ using UnityEngine;
 public class PCItemInventoryHandler : BaseMonoBehaviour
 {
     public static ItemPickup foundItem;
+    public static bool PickUpFinished = true;
+
     private StatePatternPlayableCharacter player;
     private static ItemData item;
     public static ItemData Item
@@ -48,11 +50,11 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
     }
     private ItemData.WeaponType currentWeaponType;
 
-
     private void Start()
     {
         player = this.GetComponent<StatePatternPlayableCharacter>();
         SetStartingWeapon();
+        OverrideAnimationClips();
 
     }
 
@@ -69,28 +71,28 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
 
     public void PickUpItem()
     {
+        PickUpFinished = false;
         item = foundItem.Item;
 
-        //First - Determine what type of weapon it is
-
-        switch(item.itemType)
+        switch (item.itemType)
         {
             case ItemData.ItemType.Weapon:
-                PickUpWeapon();
+                StartCoroutine(PickUpWeapon());
                 break;
 
             case ItemData.ItemType.Shield:
-                PickUpShield();
+                StartCoroutine(PickUpShield());
                 break;
 
             case ItemData.ItemType.Consumable:
                 break;
         }
-
     }
 
+    
+
     //If Item is a Weapon
-    private void PickUpWeapon()
+    IEnumerator PickUpWeapon()
     {
         //Check if we already have a weapon
         if(hasWeapon)
@@ -107,13 +109,15 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
                     //Drop Current Shield
                     GameObject droppedShield = ItemManager.Instance.GetShield(currentShieldIndex);
 
-                    droppedShield.transform.position = new Vector3(this.transform.position.x - 2.0f,
+                    droppedShield.transform.position = new Vector3(this.transform.position.x - 1.75f,
                                                                    1.0f,
-                                                                   this.transform.position.z - 2.0f);
+                                                                   this.transform.position.z - 1.75f);
                     droppedShield.SetActive(true);
 
                     //Set Old Shield Durability
-                    droppedShield.GetComponent<ItemPickup>().ItemDurability = shieldDurability;
+                    ItemPickup droppedItem = droppedShield.GetComponent<ItemPickup>();
+                    droppedItem.ItemDurability = shieldDurability;
+                    droppedItem.ReactivateItem();
 
                     player.HasShield = false;
                 }
@@ -139,9 +143,15 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
                 droppedWeapon.SetActive(true);
 
                 //Set Old Weapon Durability
-                droppedWeapon.GetComponent<ItemPickup>().ItemDurability = weaponDurability;
+                ItemPickup droppedItem = droppedWeapon.GetComponent<ItemPickup>();
+                droppedItem.ItemDurability = weaponDurability;
+                droppedItem.ReactivateItem();
+                
             }
         }
+
+        //Used to line up Pickup with Animation
+        yield return new WaitForSeconds(0.9f);
 
         //Set New Weapon Model
         currentWeaponIndex = item.weaponIndex;
@@ -157,9 +167,11 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
 
         hasWeapon = true;
         foundItem.GetItem();
+
+        OverrideAnimationClips();
     }
 
-    private void PickUpShield()
+    IEnumerator PickUpShield()
     {
         //Check if we already have a shield
         if(player.HasShield)
@@ -174,9 +186,11 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
                                                            1.0f,
                                                            this.transform.position.z);
             droppedShield.SetActive(true);
-
+            
             //Set Old Shield Durability
-            droppedShield.GetComponent<ItemPickup>().ItemDurability = shieldDurability; 
+            ItemPickup droppedItem = droppedShield.GetComponent<ItemPickup>();
+            droppedItem.ItemDurability = shieldDurability;
+            droppedItem.ReactivateItem();
         }
         else
         {
@@ -194,25 +208,72 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
 
                 droppedWeapon.SetActive(true);
 
+                //Set Old Weapon Durability
+                ItemPickup droppedItem = droppedWeapon.GetComponent<ItemPickup>();
+                droppedItem.ItemDurability = weaponDurability;
+                droppedItem.ReactivateItem();
+
                 //Activate Dagger
                 SetStartingWeapon();
             }
         }
+        //Used to line up Pickup with Animation
+        yield return new WaitForSeconds(0.9f);
 
         currentShieldIndex = item.shieldIndex;
         shields[currentShieldIndex].SetActive(true);
         player.HasShield = true;
 
         //Set Shield Durability
-        shieldDurability = foundItem.ItemDurability;
+        if(foundItem)
+            shieldDurability = foundItem.ItemDurability;
 
         //Trigger UI Change
         EventManager.TriggerEvent(Events.NewShieldPickup);
         
         foundItem.GetItem();
 
-        //Implement New Movement Animations
+        OverrideAnimationClips();       
+    }
 
-        //Implement New Combat Animations        
+    //Takes New Weapon and Sets Up New Animations
+    private void OverrideAnimationClips()
+    {
+        Animator animator = GetComponent<Animator>();
+
+        AnimatorOverrideController overrideController = new AnimatorOverrideController();
+        overrideController.runtimeAnimatorController = GetEffectiveController(animator);
+
+        //Set Up New Animation Clips - Movement   
+
+        overrideController["Idle"] = item.movementAnimations.idleAnim.clip;        
+
+        overrideController["Move"] = item.movementAnimations.moveAnim.clip;
+
+        overrideController["Roll"] = item.movementAnimations.rollAnim.clip;
+
+        overrideController["BlockMove"] = item.movementAnimations.blockingMoveAnim.clip;
+
+        overrideController["BlockIdle"] = item.movementAnimations.blockingIdle.clip;
+       
+
+        animator.runtimeAnimatorController = overrideController;
+
+        PickUpFinished = true;
+    }
+
+    //Create New Animator
+    private RuntimeAnimatorController GetEffectiveController(Animator animator)
+    {
+        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+
+        AnimatorOverrideController overrideController = controller as AnimatorOverrideController;
+        while (overrideController != null)
+        {
+            controller = overrideController.runtimeAnimatorController;
+            overrideController = controller as AnimatorOverrideController;
+        }
+
+        return controller;
     }
 }

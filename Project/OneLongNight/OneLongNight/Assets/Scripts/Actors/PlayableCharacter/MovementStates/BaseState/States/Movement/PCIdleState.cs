@@ -28,6 +28,13 @@ public class PCIdleState : IPlayableCharacterState
             }
         }
 
+        //Check if Player is Picking Up An Item
+        if(player.IsPickingUp)
+        {
+            player.PCAnimator.SetBool("isPickingUp", true);
+            OnExitState(player.pickUpState);
+        }
+
         //Check for Movement
         if (player.MovementVector != Vector3.zero)
         {
