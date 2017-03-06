@@ -55,7 +55,7 @@ public class PlayerInstructionCanvasHandler : BaseMonoBehaviour
 
     private void SetItemIcon()
     {
-        pickupIcon.sprite = StatePatternPlayableCharacter.item.Item.itemIcon;
+        pickupIcon.sprite = PCItemInventoryHandler.foundItem.Item.itemIcon;
         TurnOnPickUp();
     }
 }

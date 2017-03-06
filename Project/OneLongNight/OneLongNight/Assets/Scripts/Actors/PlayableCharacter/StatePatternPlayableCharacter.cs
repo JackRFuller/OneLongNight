@@ -29,34 +29,12 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     [Header("Items")]
     [SerializeField]
     private PCItemInventoryHandler itemHandler; //Cycles through all of the logic for picking up and placing items
-    public static ItemPickup item;    
+        
 
     //Weapons========================================================================
     [Header("Weapons")]
     [SerializeField]
-    private WeaponData startingWeapon;
-    [SerializeField]
-    private GameObject[] weapons;
-    private WeaponData currentWeapon;
-    public WeaponData CurrentWeapon
-    {
-        get
-        {
-            return currentWeapon;
-        }
-    }
-    private static WeaponPickup weaponPickup;
-    public static WeaponPickup WeaponPickUp
-    {
-        get
-        {
-            return weaponPickup;
-        }
-        set
-        {
-            weaponPickup = value;
-        }
-    }
+    private WeaponData startingWeapon;    
     
     private bool hasShield;
     public bool HasShield
@@ -172,7 +150,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Set Up New Animation Clips - Movement
 		overrideController["Idle"] = newWeapon.MovementAnimation.idleAnim.clip;
 		//overrideController["Jog"] = newWeapon.MovementAnimation.walkAnim.clip;
-		overrideController["Move"] = newWeapon.MovementAnimation.runAnim.clip;
+		overrideController["Move"] = newWeapon.MovementAnimation.walkAnim.clip;
 		//overrideController["SlowRoll"] = newWeapon.MovementAnimation.slowRollAnim.clip;
 		overrideController["Roll"] = newWeapon.MovementAnimation.fastRollAnim.clip;
 
@@ -197,19 +175,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
 
         return controller;
-    }
-       
-    void GetWeapon()
-    {
-        currentWeapon = weaponPickup.Weapon;
-        
-        weaponPickup.GetWeapon();
-
-        weapons[weaponPickup.WeaponIndex].SetActive(true);
-
-		OverrideAnimationClips(currentWeapon);
-        weaponPickup = null;
-    }
+    }           
 
     public override void UpdateNormal()
     {
@@ -249,8 +215,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //PickUp
         if(Input.GetKeyDown(KeyCode.E))
         {
-            if (item)
-                itemHandler.PickUpItem(item.Item);
+            if (PCItemInventoryHandler.foundItem)
+                itemHandler.PickUpItem();
         }
 
 

@@ -10,9 +10,55 @@ public class ItemManager : MonoSingleton<ItemManager>
     private List<GameObject> shieldPickups;
     private const int numberOfShieldPickups = 5;
 
+    [Header("Weapons")]
+    [SerializeField]
+    private GameObject[] weaponPickupPrefabs;
+    private List<GameObject> weaponPickups;
+    private const int numberOfWeaponPickups = 5;
+
     private void Start()
     {
         SpawnInShieldPickups();
+        SpawnInWeaponPickups();
+    }
+
+    private void SpawnInWeaponPickups()
+    {
+        weaponPickups = new List<GameObject>();
+
+        GameObject weaponHolder = new GameObject();
+        weaponHolder.name = "WeaponHolder";
+
+        for(int i = 0; i < weaponPickupPrefabs.Length; i++)
+        {
+            for(int j = 0; j < numberOfWeaponPickups; j++)
+            {
+                GameObject weapon = Instantiate(weaponPickupPrefabs[i]) as GameObject;
+
+                weaponPickups.Add(weapon);
+
+                weapon.transform.parent = weaponHolder.transform;
+                weapon.transform.localPosition = Vector3.zero;
+                weapon.SetActive(false);
+            }
+        }
+    }
+
+    public GameObject GetWeapon(int weaponIndex)
+    {
+        for(int i = 0; i < weaponPickups.Count; i++)
+        {
+            if(weaponPickups[i].GetComponent<ItemPickup>().Item.weaponIndex == weaponIndex)
+            {
+                if(!weaponPickups[i].activeInHierarchy)
+                {
+                    return weaponPickups[i];
+                }
+            }
+        }
+
+        Debug.LogError("NO WEAPON FOUND!!!!");
+        return new GameObject();
     }
 
     private void SpawnInShieldPickups()

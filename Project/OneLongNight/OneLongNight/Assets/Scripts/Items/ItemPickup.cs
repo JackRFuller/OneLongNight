@@ -44,14 +44,14 @@ public class ItemPickup : BaseMonoBehaviour
 
         EventManager.TriggerEvent(Events.ExitItemPickup);
         this.gameObject.SetActive(false);
-        StatePatternPlayableCharacter.item = null;
+        PCItemInventoryHandler.foundItem = null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
-            StatePatternPlayableCharacter.item = this;
+            PCItemInventoryHandler.foundItem = this;
             EventManager.TriggerEvent(Events.HitItemPickup);
         }
     }
@@ -60,7 +60,7 @@ public class ItemPickup : BaseMonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
-            StatePatternPlayableCharacter.item = null;
+            PCItemInventoryHandler.foundItem = null;
             EventManager.TriggerEvent(Events.ExitItemPickup);
         }
     }

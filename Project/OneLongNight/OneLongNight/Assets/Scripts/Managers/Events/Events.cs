@@ -12,6 +12,9 @@ public class Events
 
     //Shield Pickup
     public static string NewShieldPickup = "NewShieldPickup;"; //Triggered when player picks up a new Shield
+
+    //Weapon Pickup
+    public static string NewWeaponPickup = "NewWeaponPickup"; //Triggered when player picks up a new Weapon
     
 
 }

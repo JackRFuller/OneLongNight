@@ -13,7 +13,9 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
 
     [Header("Weapon UI Elements")]
     [SerializeField]
-    private Image weaponImage;   
+    private Image weaponImage;
+    [SerializeField]
+    private Image weaponDurabilityBar;  
 
     [Header("Stamina UI Elements")]
     [SerializeField]
@@ -22,17 +24,20 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
     private void OnEnable()
     {
         EventManager.StartListening(Events.NewShieldPickup, ChangedShield);
+        EventManager.StartListening(Events.NewWeaponPickup, ChangeWeaponImage);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(Events.NewShieldPickup, ChangedShield);
+        EventManager.StopListening(Events.NewWeaponPickup, ChangeWeaponImage);
     }
 
     private void ChangedShield()
     {
         //Change Image
-        shieldImage.sprite = StatePatternPlayableCharacter.item.Item.itemIcon;
+        shieldImage.sprite = PCItemInventoryHandler.Item.itemIcon;
+
         //Change Durability
         float currentDurability = PCItemInventoryHandler.ShieldDurability;        
         float fillAmount = currentDurability * 0.01f;        
@@ -41,7 +46,7 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
 
     private void ChangeWeaponImage()
     {
-        weaponImage.sprite = StatePatternPlayableCharacter.WeaponPickUp.Weapon.WeaponIcon;
+        weaponImage.sprite = PCItemInventoryHandler.Item.itemIcon;
     }
 
     public override void UpdateNormal()
@@ -54,5 +59,4 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
         float fillPercent = PCAttributes.Instance.PCStamina * 0.01f;      
         staminaBarImage.fillAmount = fillPercent;
     }
-
 }

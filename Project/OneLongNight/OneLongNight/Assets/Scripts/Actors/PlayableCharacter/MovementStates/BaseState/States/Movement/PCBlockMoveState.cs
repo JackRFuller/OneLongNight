@@ -31,8 +31,14 @@ public class PCBlockMoveState : IPlayableCharacterState
             //Check for Movement
             if(player.MovementVector != Vector3.zero)
             {
+                //Check that we're not currently rolling
+                AnimatorStateInfo currentState = player.PCAnimator.GetCurrentAnimatorStateInfo(0);
+
+                if (currentState.fullPathHash == Animator.StringToHash("Base Layer.BlockMove"))
+                    player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+
                 //Check if we're not blocking
-                if(!player.IsBlocking)
+                if (!player.IsBlocking)
                 {
                     player.PCAnimator.SetBool("isBlocking", false);
                     OnExitState(player.moveState);
@@ -41,11 +47,7 @@ public class PCBlockMoveState : IPlayableCharacterState
                 player.PCAnimator.SetInteger("Movement", 1);
 
 
-                //Check that we're not currently rolling
-                AnimatorStateInfo currentState = player.PCAnimator.GetCurrentAnimatorStateInfo(0);
-
-                if (currentState.fullPathHash == Animator.StringToHash("Base Layer.BlockMove"))
-                    player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+                
             }
         }
     }
