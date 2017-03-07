@@ -197,7 +197,6 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
                 isTryingToAttack = false;
             }
         }
-       
 
         //Get Roll Input
         if(Input.GetKeyDown(KeyCode.Space))

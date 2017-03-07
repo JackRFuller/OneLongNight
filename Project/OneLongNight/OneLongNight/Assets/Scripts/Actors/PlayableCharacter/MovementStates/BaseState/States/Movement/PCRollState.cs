@@ -24,7 +24,6 @@ public class PCRollState : IPlayableCharacterState
         if(timer > 0)
         {
             timer -= Time.deltaTime;
-            Debug.Log("Wait For Roll To Finish");
         }
         else
         {
