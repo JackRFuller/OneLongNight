@@ -10,43 +10,59 @@ public class PCPickupState : IPlayableCharacterState
         player = pcStateController;
     }
 
+    private const float timerStartTime = 1.2f;
+    private float timer;
+
     public void OnEnterState()
     {
+        timer = timerStartTime;
+
+        Vector3 lookPos = PCItemInventoryHandler.foundItem.transform.position - player.transform.position;
+        lookPos.y = 0;
+        Quaternion rotation = Quaternion.LookRotation(lookPos);
+
+        player.transform.rotation = rotation;
 
     }
 
     public void OnUpdateState()
     {
-        player.PCAnimator.SetBool("isPickingUp", false);
-        
-        //Check for Movement
-        if (player.MovementVector != Vector3.zero)
+        if (timer > 0)
         {
-            if (player.IsBlocking)
-            {
-                player.PCAnimator.SetBool("isBlocking", true);
-                OnExitState(player.blockMoveState);
-            }
-            else
-            {
-                OnExitState(player.moveState);
-            }
-
+            timer -= Time.deltaTime;
         }
         else
         {
-            if (player.IsBlocking)
+            player.PCAnimator.SetBool("isPickingUp", false);
+
+            //Check for Movement
+            if (player.MovementVector != Vector3.zero)
             {
-                player.PCAnimator.SetBool("isBlocking", true);
-                OnExitState(player.blockIdleState);
+                if (player.IsBlocking)
+                {
+                    player.PCAnimator.SetBool("isBlocking", true);
+                    OnExitState(player.blockMoveState);
+                }
+                else
+                {
+                    OnExitState(player.moveState);
+                }
+
             }
             else
             {
-                player.PCAnimator.SetInteger("Movement", 0);
-                OnExitState(player.idleState);
+                if (player.IsBlocking)
+                {
+                    player.PCAnimator.SetBool("isBlocking", true);
+                    OnExitState(player.blockIdleState);
+                }
+                else
+                {
+                    player.PCAnimator.SetInteger("Movement", 0);
+                    OnExitState(player.idleState);
+                }
             }
         }
-        
     }
 
     public void OnExitState(IPlayableCharacterState newState)

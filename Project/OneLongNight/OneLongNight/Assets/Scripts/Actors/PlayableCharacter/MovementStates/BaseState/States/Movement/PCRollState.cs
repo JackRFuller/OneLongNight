@@ -10,25 +10,57 @@ public class PCRollState : IPlayableCharacterState
         player = pcStateController;
     }
 
+    private const float timerStartTime = 1.1f;
+    private float timer;
+
     public void OnEnterState()
     {
-
+        PCAttributes.Instance.RemoveStamina(player.RollAction.ActionCost);
+        timer = timerStartTime;
     }
 
     public void OnUpdateState()
     {
-        //Check if we have movement
-        if(player.MovementVector != Vector3.zero)
+        if(timer > 0)
         {
-            //Check if we're blocking 
-            player.PCAnimator.SetInteger("Movement", 1);
-            OnExitState(player.moveState);
-            
-
+            timer -= Time.deltaTime;
+            Debug.Log("Wait For Roll To Finish");
         }
         else
         {
-            //Go to Idle
+            //Check if we have movement
+            if (player.MovementVector != Vector3.zero)
+            {
+                player.PCAnimator.SetInteger("Movement", 1);
+
+                //Check if we're blocking 
+                if (player.IsBlocking)
+                {
+                    player.PCAnimator.SetBool("isBlocking", true);
+                    OnExitState(player.blockMoveState);
+                }
+                else
+                {
+                    player.PCAnimator.SetBool("isBlocking", false);
+                    OnExitState(player.moveState);
+                }
+            }
+            else
+            {
+                player.PCAnimator.SetInteger("Movement", 0);
+
+                //Check if We're Blocking
+                if (player.IsBlocking)
+                {
+                    player.PCAnimator.SetBool("isBlocking", true);
+                    OnExitState(player.blockIdleState);
+                }
+                else
+                {
+                    player.PCAnimator.SetBool("isBlocking", false);
+                    OnExitState(player.idleState);
+                }
+            }
         }
     }
 

@@ -38,6 +38,8 @@ public class PCIdleState : IPlayableCharacterState
         //Check for Movement
         if (player.MovementVector != Vector3.zero)
         {
+            //player.PCAnimator.SetInteger("Movement", 1);
+
             if(player.IsBlocking)
             {
                 player.PCAnimator.SetBool("isBlocking", true);
@@ -45,6 +47,7 @@ public class PCIdleState : IPlayableCharacterState
             }
             else
             {
+                player.PCAnimator.SetBool("isBlocking", false);
                 OnExitState(player.moveState);
             }
             

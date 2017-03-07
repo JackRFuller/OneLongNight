@@ -17,10 +17,17 @@ public class PCBlockMoveState : IPlayableCharacterState
 
     public void OnUpdateState()
     {
-        //Check if We're Rolling
-        if(player.IsRolling)
+        //Check if We're Picking Up Items
+        if (player.IsPickingUp)
         {
-            if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.RollAction.ActionCost))
+            player.PCAnimator.SetBool("isPickingUp", true);
+            OnExitState(player.pickUpState);
+        }
+
+        //Check if We're Rolling
+        if (player.IsRolling)
+        {
+            if (PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.RollAction.ActionCost))
             {
                 player.PCAnimator.SetBool("isRolling", true);
                 OnExitState(player.rollState);
@@ -28,22 +35,10 @@ public class PCBlockMoveState : IPlayableCharacterState
         }
         else
         {
-            //Check if We're Picking Up Items
-            if (player.IsPickingUp)
-            {
-                player.PCAnimator.SetBool("isPickingUp", true);
-                OnExitState(player.pickUpState);
-            }
-
-
             //Check for Movement
             if (player.MovementVector != Vector3.zero)
             {
-                //Check that we're not currently rolling
-                AnimatorStateInfo currentState = player.PCAnimator.GetCurrentAnimatorStateInfo(0);
-
-                if (currentState.fullPathHash == Animator.StringToHash("Base Layer.BlockMove"))
-                    player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+                player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
 
                 //Check if we're not blocking
                 if (!player.IsBlocking)
