@@ -68,6 +68,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     [HideInInspector] public PCBlockMoveState blockMoveState;
     [HideInInspector] public PCRollState rollState;
     [HideInInspector] public PCPickupState pickUpState;
+    [HideInInspector] public PCAttackState attackState;
 
     //Inputs =========================================================================
     //Movement
@@ -98,12 +99,12 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
-    private bool isTryingToAttack;
-    public bool IsTryingToAttack
+    private bool isAttacking;
+    public bool IsAttacking
     {
         get
         {
-            return isTryingToAttack;
+            return isAttacking;
         }
     }
 
@@ -127,6 +128,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         rollState = new PCRollState(this);
         blockMoveState = new PCBlockMoveState(this);
         pickUpState = new PCPickupState(this);
+
+        attackState = new PCAttackState(this);
         
         //Set Starting State
         currentState = idleState;
@@ -190,11 +193,11 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         {
             if(Input.GetMouseButton(0))
             {
-                isTryingToAttack = true;
+                isAttacking = true;
             }
             else
             {
-                isTryingToAttack = false;
+                isAttacking = false;
             }
         }
 

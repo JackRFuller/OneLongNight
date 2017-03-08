@@ -17,6 +17,12 @@ public class PCIdleState : IPlayableCharacterState
 
     public void OnUpdateState()
     {
+        if(player.IsAttacking)
+        {
+            //Check if We Have Enough Stamina to Attack
+            OnExitState(player.attackState);
+        }
+
         //Check For Roll
         if(player.IsRolling)
         {

@@ -6,9 +6,10 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     public ItemType itemType;
-    public Sprite itemIcon;   
+    public Sprite itemIcon;
 
     [Header("If Weapon")]
+    public WeaponWeight weaponWeight;
     public WeaponType weaponType;
     public int weaponIndex;
 
@@ -30,6 +31,13 @@ public class ItemData : ScriptableObject
     {
         OneHanded,
         TwoHanded,
+    }
+
+    public enum WeaponWeight
+    {
+        Light,
+        Medium,
+        Heavy,
     }
 
 }

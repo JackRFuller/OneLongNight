@@ -49,6 +49,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         }
     }
     private ItemData.WeaponType currentWeaponType;
+    public static ItemData CurrentWeapon;
 
     private void Start()
     {
@@ -62,6 +63,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
     {
         item = startingWeapon;
         currentWeaponType = startingWeapon.weaponType;
+        CurrentWeapon = startingWeapon;
         weapons[5].SetActive(true);
         daggerPlaceholder.SetActive(false);
         hasWeapon = true;
@@ -164,6 +166,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         EventManager.TriggerEvent(Events.NewWeaponPickup);
 
         currentWeaponType = item.weaponType;
+        CurrentWeapon = item;
 
         hasWeapon = true;
         foundItem.GetItem();

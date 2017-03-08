@@ -15,6 +15,9 @@ public class Events
 
     //Weapon Pickup
     public static string NewWeaponPickup = "NewWeaponPickup"; //Triggered when player picks up a new Weapon
+
+    //Combat===========================
+    public static string HitEnemy = "HitEnemy"; //Triggered when the player hits an enemy with a weapon
     
 
 }

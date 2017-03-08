@@ -13,6 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   itemIcon: {fileID: 21300000, guid: b63bc1166fc0c5a4fb201c0d597fb45e, type: 3}
+  weaponWeight: 2
   weaponType: 1
   weaponIndex: 2
   shieldIndex: 0
