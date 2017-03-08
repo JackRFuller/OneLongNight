@@ -247,8 +247,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         AnimatorOverrideController overrideController = new AnimatorOverrideController();
         overrideController.runtimeAnimatorController = GetEffectiveController(animator);
 
-        //Set Up New Animation Clips - Movement   
-
+        //Set Up New Animation Clips - Movement
         overrideController["Idle"] = item.movementAnimations.idleAnim.clip;        
 
         overrideController["Move"] = item.movementAnimations.moveAnim.clip;
@@ -258,7 +257,15 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         overrideController["BlockMove"] = item.movementAnimations.blockingMoveAnim.clip;
 
         overrideController["BlockIdle"] = item.movementAnimations.blockingIdle.clip;
-       
+
+        //Set Up New Animation Clips - Combat
+        overrideController["Attack1"] = item.weaponAnimations.attackOneAnim.clip;
+
+        overrideController["Attack2"] = item.weaponAnimations.attackTwoAnim.clip;
+
+        overrideController["Attack3"] = item.weaponAnimations.attackThreeAnim.clip;
+
+        overrideController["Attack4"] = item.weaponAnimations.attackFourAnim.clip;
 
         animator.runtimeAnimatorController = overrideController;
 

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe20f98ada39c4444826ebcd7d19e3e1, type: 3}
+  m_Name: Scythe Animations
+  m_EditorClassIdentifier: 
+  attackOneAnim:
+    clip: {fileID: 7400000, guid: 3233a73f49db77e48a2f28bd6a5b91eb, type: 2}
+    clipSpeed: 0
+  attackTwoAnim:
+    clip: {fileID: 7400000, guid: 6314624a468e64440a9934f47d120c47, type: 2}
+    clipSpeed: 0
+  attackThreeAnim:
+    clip: {fileID: 7400000, guid: 317179c5920464e4cb5756a976fd8bfd, type: 2}
+    clipSpeed: 0
+  attackFourAnim:
+    clip: {fileID: 7400000, guid: 7fdea205cdd90c041bf51423e34b8245, type: 2}
+    clipSpeed: 0
