@@ -222,7 +222,11 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
             {
                 isBlocking = false;
             }
-        }        
+        }  
+        else
+        {
+            isBlocking = false;
+        }      
 
         //Get Directional Movement
         float x = Input.GetAxis("Horizontal");

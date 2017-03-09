@@ -120,7 +120,7 @@ public class PCAttackState : IPlayableCharacterState
             else
             {
                 player.PCAnimator.SetBool("isBlocking", false);
-                OnExitState(player.blockIdleState);
+                OnExitState(player.idleState);
             }
         }
     }

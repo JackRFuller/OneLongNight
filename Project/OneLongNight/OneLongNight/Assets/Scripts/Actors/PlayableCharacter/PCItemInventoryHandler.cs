@@ -34,10 +34,12 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
             return shieldDurability;
         }
     }
+    private bool justPickedUpShield;
 
     [Header("Weapons")]
     [SerializeField]
     private GameObject[] weapons;
+    private List<Collider> weaponColliders;
     private int currentWeaponIndex;
     private bool hasWeapon;
     private static float weaponDurability;
@@ -54,9 +56,17 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
     private void Start()
     {
         player = this.GetComponent<StatePatternPlayableCharacter>();
+
+        //Get Colliders to Turn On And Off
+        weaponColliders = new List<Collider>();
+
+        for(int i = 0; i < weapons.Length; i++)
+        {
+            weaponColliders.Add(weapons[i].GetComponent<Collider>());
+        }
+        
         SetStartingWeapon();
         OverrideAnimationClips();
-
     }
 
     void SetStartingWeapon()
@@ -91,7 +101,19 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         }
     }
 
-    
+    public void TurnOnWeapon()
+    {
+        weaponColliders[currentWeaponIndex].enabled = true;
+        Debug.Log(weaponColliders[currentWeaponIndex].gameObject.name + " On");
+    }
+
+    public void TurnOffWeapon()
+    {
+        weaponColliders[currentWeaponIndex].enabled = false;
+        Debug.Log(weaponColliders[currentWeaponIndex].gameObject.name + " Off");
+    }
+
+
 
     //If Item is a Weapon
     IEnumerator PickUpWeapon()
@@ -236,6 +258,8 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         
         foundItem.GetItem();
 
+        justPickedUpShield = true;
+
         OverrideAnimationClips();       
     }
 
@@ -247,27 +271,38 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         AnimatorOverrideController overrideController = new AnimatorOverrideController();
         overrideController.runtimeAnimatorController = GetEffectiveController(animator);
 
-        //Set Up New Animation Clips - Movement
-        overrideController["Idle"] = item.movementAnimations.idleAnim.clip;        
+        //If Player Picked Up a Shield
 
-        overrideController["Move"] = item.movementAnimations.moveAnim.clip;
+       //Conditions
+       // 1 - If player picksup a new two handed weapon
+       // 2 - If player picks up a shield
 
-        overrideController["Roll"] = item.movementAnimations.rollAnim.clip;
+        if(justPickedUpShield || CurrentWeapon.weaponType == ItemData.WeaponType.TwoHanded || !player.HasShield)
+        {
+            //Set Up New Animation Clips - Movement
+            overrideController["Idle"] = item.movementAnimations.idleAnim.clip;
 
-        overrideController["BlockMove"] = item.movementAnimations.blockingMoveAnim.clip;
+            overrideController["Move"] = item.movementAnimations.moveAnim.clip;
 
-        overrideController["BlockIdle"] = item.movementAnimations.blockingIdle.clip;
+            overrideController["Roll"] = item.movementAnimations.rollAnim.clip;
 
-        //Set Up New Animation Clips - Combat
-        overrideController["Attack1"] = item.weaponAnimations.attackOneAnim.clip;
+            overrideController["BlockMove"] = item.movementAnimations.blockingMoveAnim.clip;
 
-        overrideController["Attack2"] = item.weaponAnimations.attackTwoAnim.clip;
+            overrideController["BlockIdle"] = item.movementAnimations.blockingIdle.clip;
 
-        overrideController["Attack3"] = item.weaponAnimations.attackThreeAnim.clip;
+            //Set Up New Animation Clips - Combat
+            overrideController["Attack1"] = item.weaponAnimations.attackOneAnim.clip;
 
-        overrideController["Attack4"] = item.weaponAnimations.attackFourAnim.clip;
+            overrideController["Attack2"] = item.weaponAnimations.attackTwoAnim.clip;
 
-        animator.runtimeAnimatorController = overrideController;
+            overrideController["Attack3"] = item.weaponAnimations.attackThreeAnim.clip;
+
+            overrideController["Attack4"] = item.weaponAnimations.attackFourAnim.clip;
+
+            animator.runtimeAnimatorController = overrideController;
+
+            justPickedUpShield = false;
+        }
 
         PickUpFinished = true;
     }

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Name: Dagger Animations
   m_EditorClassIdentifier: 
   attackOneAnim:
-    clip: {fileID: 7400000, guid: ec48fe135967d994fa9f2ac305061402, type: 2}
+    clip: {fileID: 7400000, guid: e0bc5b33b770ab7438d33f4441a5b86c, type: 2}
     clipSpeed: 0
   attackTwoAnim:
-    clip: {fileID: 7400000, guid: d797dc4b3d3bf6e43a3b222fa5836c62, type: 2}
+    clip: {fileID: 7400000, guid: 0c39ec3eaee7c0b4baded4843b5c512b, type: 2}
     clipSpeed: 0
   attackThreeAnim:
     clip: {fileID: 7400000, guid: 19d2367d71c51d048afc8f706f68cca9, type: 2}

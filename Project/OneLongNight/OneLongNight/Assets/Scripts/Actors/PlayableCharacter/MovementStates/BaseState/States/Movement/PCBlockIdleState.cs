@@ -17,7 +17,10 @@ public class PCBlockIdleState : IPlayableCharacterState
 
     public void OnUpdateState()
     {
-        
+        if (player.IsAttacking)
+        {
+            OnExitState(player.attackState);
+        }
 
         //Check if We're Picking Up Items
         if (player.IsPickingUp)

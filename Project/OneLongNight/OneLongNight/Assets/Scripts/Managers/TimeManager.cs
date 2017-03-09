@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TimeManager : MonoSingleton<TimeManager>
 {
-    private float combatSlowMoTimer = 0.2f;
+    private float combatSlowMoTimer = 0.1f;
     private bool isRunningTimer;
 
     private void OnEnable()
@@ -19,8 +19,12 @@ public class TimeManager : MonoSingleton<TimeManager>
 
     private void SetSlowMoForCombatHit()
     {
-        Time.timeScale = 0.3f;
-        isRunningTimer = true;
+        if(!isRunningTimer)
+        {
+            Time.timeScale = 0.3f;
+            isRunningTimer = true;
+        }
+       
     }
 
     private void Update()
@@ -32,7 +36,7 @@ public class TimeManager : MonoSingleton<TimeManager>
         }
         if(combatSlowMoTimer < 0)        
         {
-            combatSlowMoTimer = 0.3f;
+            combatSlowMoTimer = 0.2f;
             Time.timeScale = 1.0f;
             isRunningTimer = false;
         }

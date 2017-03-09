@@ -13,8 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemIcon: {fileID: 21300000, guid: f0c678c46f3c17442be278470f723d83, type: 3}
+  weaponWeight: 0
   weaponType: 0
   weaponIndex: 0
   shieldIndex: 1
   movementAnimations: {fileID: 11400000, guid: 7fb113b87f01cd0489832d2b7f78fa56, type: 2}
-  weaponAnimations: {fileID: 0}
+  weaponAnimations: {fileID: 11400000, guid: 2e8c1182864ba224aaca864e3ca7d350, type: 2}

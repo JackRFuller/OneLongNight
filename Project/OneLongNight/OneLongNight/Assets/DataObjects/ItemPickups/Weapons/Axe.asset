@@ -18,4 +18,4 @@ MonoBehaviour:
   weaponIndex: 1
   shieldIndex: 0
   movementAnimations: {fileID: 11400000, guid: 4ad9d8f9c39fec84e96b7ddb761ebaf1, type: 2}
-  weaponAnimations: {fileID: 0}
+  weaponAnimations: {fileID: 11400000, guid: 6c859a67292532b4e8624b2a1ec3fee0, type: 2}
