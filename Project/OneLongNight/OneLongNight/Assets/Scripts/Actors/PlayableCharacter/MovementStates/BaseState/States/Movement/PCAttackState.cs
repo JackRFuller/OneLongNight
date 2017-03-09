@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 public class PCAttackState : IPlayableCharacterState
 {
@@ -160,7 +161,11 @@ public class PCAttackState : IPlayableCharacterState
 
     private void CheckForAttackInput()
     {
-        if(Input.GetMouseButtonDown(0))
+
+        Player playerControls = ReInput.players.GetPlayer(0);
+
+        if (playerControls.GetButtonDown("Attack") || Input.GetMouseButtonDown(0
+            ))
         {
             hasQueuedNextAttack = true;
             CanTakeMovementInput = false;

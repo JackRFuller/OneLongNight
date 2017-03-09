@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 public class StatePatternPlayableCharacter : BaseMonoBehaviour
 {
@@ -170,8 +171,10 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     private void GetInputs()
     {
+        Player player = ReInput.players.GetPlayer(0);
+
         //Get Pickup Input
-        if(Input.GetKey(KeyCode.E))
+        if(player.GetButtonDown("Interact"))
         {
             if(PCItemInventoryHandler.PickUpFinished)
             {
@@ -191,7 +194,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Get Combat Input & Check We're not Rolling
         if(!isRolling)
         {
-            if(Input.GetMouseButton(0))
+            if(player.GetButton("Attack"))
             {
                 isAttacking = true;
             }
@@ -202,7 +205,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
 
         //Get Roll Input
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(player.GetButtonDown("Roll"))
         {
             isRolling = true;
         }
@@ -214,7 +217,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Get Block Input
         if(hasShield)
         {
-            if (Input.GetMouseButton(1))
+            if (player.GetButton("Block"))
             {
                 isBlocking = true;
             }
