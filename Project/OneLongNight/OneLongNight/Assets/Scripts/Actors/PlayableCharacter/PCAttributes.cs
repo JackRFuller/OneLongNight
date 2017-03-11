@@ -32,7 +32,6 @@ public class PCAttributes : MonoSingleton<PCAttributes>
     public void RemoveStamina(float amount)
     {
         pcStamina -= amount;
-        Debug.Log("Stamina Amount " + pcStamina);
         isRegeneratingStamina = false;
 
         StopCoroutine(cooldownRoutine);
@@ -51,7 +50,7 @@ public class PCAttributes : MonoSingleton<PCAttributes>
 
     IEnumerator CooldownToStartStaminaRegneration()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(5.0f);
         isRegeneratingStamina = true;
     }
 

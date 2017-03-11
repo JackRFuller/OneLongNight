@@ -26,8 +26,8 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
     [SerializeField]
     private GameObject[] shields;
     private int currentShieldIndex;
-    private static float shieldDurability;
-    public static float ShieldDurability
+    private static int shieldDurability;
+    public static int ShieldDurability
     {
         get
         {
@@ -35,15 +35,17 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         }
     }
     private bool justPickedUpShield;
+    public static ItemData CurrentShield;
 
     [Header("Weapons")]
     [SerializeField]
-    private GameObject[] weapons;
-    private List<Collider> weaponColliders;
+    private GameObject[] weapons;    
+    private List<WeaponHandler> weaponHandlers;
+    public static WeaponHandler currentWeaponHandler; //Holds the script for the current weapon handler
     private int currentWeaponIndex;
     private bool hasWeapon;
-    private static float weaponDurability;
-    public static float WeaponDurability
+    private static int weaponDurability;
+    public static int WeaponDurability
     {
         get
         {
@@ -53,32 +55,52 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
     private ItemData.WeaponType currentWeaponType;
     public static ItemData CurrentWeapon;
 
+    private void OnEnable()
+    {
+        EventManager.StartListening(Events.UpdateWeaponDurability, UpdateWeaponDurability);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(Events.UpdateWeaponDurability, UpdateWeaponDurability);
+    }
+
     private void Start()
     {
         player = this.GetComponent<StatePatternPlayableCharacter>();
 
-        //Get Colliders to Turn On And Off
-        weaponColliders = new List<Collider>();
+        //Get Colliders to Turn On And Off       
+        weaponHandlers = new List<WeaponHandler>();
 
         for(int i = 0; i < weapons.Length; i++)
-        {
-            weaponColliders.Add(weapons[i].GetComponent<Collider>());
+        {           
+            weaponHandlers.Add(weapons[i].GetComponent<WeaponHandler>());
         }
-        
-        SetStartingWeapon();
-        OverrideAnimationClips();
+
+        SetoToDagger();      
     }
 
-    void SetStartingWeapon()
+    /// <summary>
+    /// Set Starting Weapon to Dagger
+    /// </summary>
+    void SetoToDagger()
     {
         item = startingWeapon;
         currentWeaponType = startingWeapon.weaponType;
         CurrentWeapon = startingWeapon;
         weapons[5].SetActive(true);
         daggerPlaceholder.SetActive(false);
+
+        //Set Weapon Stats
+        currentWeaponHandler = weaponHandlers[5];
+        currentWeaponHandler.UpdateWeaponDamage(item.weaponAttackDamage);
+        weaponDurability = item.weaponDurability;
+
         hasWeapon = true;
 
         EventManager.TriggerEvent(Events.NewWeaponPickup);
+
+        OverrideAnimationClips();
     }
 
     public void PickUpItem()
@@ -101,19 +123,27 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         }
     }
 
-    public void TurnOnWeapon()
+    public void ToggleWeapon()
     {
-        weaponColliders[currentWeaponIndex].enabled = true;
-        Debug.Log(weaponColliders[currentWeaponIndex].gameObject.name + " On");
+        currentWeaponHandler.ToggleWeapon();
     }
 
-    public void TurnOffWeapon()
+    public void UpdateWeaponDurability()
     {
-        weaponColliders[currentWeaponIndex].enabled = false;
-        Debug.Log(weaponColliders[currentWeaponIndex].gameObject.name + " Off");
+        weaponDurability--;
+
+        //Debug.Log(weaponDurability);        
+        if(weaponDurability == 0)
+        {
+            //Turn Off Current Weapon
+            weapons[currentWeaponIndex].SetActive(false);
+
+            //Change To Dagger
+            SetoToDagger();
+
+            //TODO --- Impact Attack State
+        }
     }
-
-
 
     //If Item is a Weapon
     IEnumerator PickUpWeapon()
@@ -184,6 +214,9 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         //Set New Weapon's Durability
         weaponDurability = foundItem.ItemDurability;
 
+        //Set Weapon Damage Out
+        weaponHandlers[currentWeaponIndex].UpdateWeaponDamage(item.weaponAttackDamage);
+
         //Set New Weapon Icon
         EventManager.TriggerEvent(Events.NewWeaponPickup);
 
@@ -191,8 +224,11 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         CurrentWeapon = item;
 
         hasWeapon = true;
+        
+        //Turn off Pickup
         foundItem.GetItem();
 
+        //Update Animation
         OverrideAnimationClips();
     }
 
@@ -239,7 +275,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
                 droppedItem.ReactivateItem();
 
                 //Activate Dagger
-                SetStartingWeapon();
+                SetoToDagger();
             }
         }
         //Used to line up Pickup with Animation
@@ -259,6 +295,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         foundItem.GetItem();
 
         justPickedUpShield = true;
+        CurrentShield = item;
 
         OverrideAnimationClips();       
     }
@@ -280,7 +317,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         if(justPickedUpShield || CurrentWeapon.weaponType == ItemData.WeaponType.TwoHanded || !player.HasShield)
         {
             //Set Up New Animation Clips - Movement
-            overrideController["Idle"] = item.movementAnimations.idleAnim.clip;
+            overrideController["Idle"] = item.movementAnimations.idleAnim.clip;            
 
             overrideController["Move"] = item.movementAnimations.moveAnim.clip;
 
@@ -292,12 +329,16 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
 
             //Set Up New Animation Clips - Combat
             overrideController["Attack1"] = item.weaponAnimations.attackOneAnim.clip;
+            animator.SetFloat("Attack1Speed", item.weaponAnimations.attackOneAnim.clipSpeed);
 
             overrideController["Attack2"] = item.weaponAnimations.attackTwoAnim.clip;
+            animator.SetFloat("Attack2Speed", item.weaponAnimations.attackTwoAnim.clipSpeed);
 
             overrideController["Attack3"] = item.weaponAnimations.attackThreeAnim.clip;
+            animator.SetFloat("Attack3Speed", item.weaponAnimations.attackThreeAnim.clipSpeed);
 
             overrideController["Attack4"] = item.weaponAnimations.attackFourAnim.clip;
+            animator.SetFloat("Attack4Speed", item.weaponAnimations.attackFourAnim.clipSpeed);
 
             animator.runtimeAnimatorController = overrideController;
 

@@ -8,5 +8,5 @@ public class WeaponAnimations : ScriptableObject
 	public AnimationClipData attackOneAnim;
 	public AnimationClipData attackTwoAnim;
 	public AnimationClipData attackThreeAnim;
-    public AnimationClipData attackFourAnim;
+    public AnimationClipData attackFourAnim;    
 }

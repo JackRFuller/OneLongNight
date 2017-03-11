@@ -19,7 +19,12 @@ public class PCBlockIdleState : IPlayableCharacterState
     {
         if (player.IsAttacking)
         {
-            OnExitState(player.attackState);
+            //Check We Have Enough Stamina
+            if (PCAttributes.Instance.CheckIfPCHasEnoughStamina(PCItemInventoryHandler.CurrentWeapon.weaponAttackCosts[0]))
+            {
+                //Check if We Have Enough Stamina to Attack
+                OnExitState(player.attackState);
+            }
         }
 
         //Check if We're Picking Up Items

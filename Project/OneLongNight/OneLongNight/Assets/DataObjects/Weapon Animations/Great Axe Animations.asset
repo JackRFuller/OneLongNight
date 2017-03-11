@@ -13,13 +13,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackOneAnim:
     clip: {fileID: 0}
-    clipSpeed: 0
+    clipSpeed: 1
   attackTwoAnim:
     clip: {fileID: 0}
-    clipSpeed: 0
+    clipSpeed: 1
   attackThreeAnim:
     clip: {fileID: 0}
-    clipSpeed: 0
+    clipSpeed: 1
   attackFourAnim:
     clip: {fileID: 0}
-    clipSpeed: 0
+    clipSpeed: 1

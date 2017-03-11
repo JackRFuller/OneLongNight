@@ -9,7 +9,6 @@ public class AnimationCombatStateHandler : StateMachineBehaviour
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        PCAttackState.CanTakeAttackInput = true;
-        PCAttackState.animationTimer = stateInfo.length;
+        PCAttackState.InitiateAttack(stateInfo.length);
     }
 }

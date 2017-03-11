@@ -19,8 +19,8 @@ public class ItemPickup : BaseMonoBehaviour
     }
 
     [SerializeField]
-    private float itemDurability;
-    public float ItemDurability
+    private int itemDurability;
+    public int ItemDurability
     {
         get
         {
@@ -35,6 +35,17 @@ public class ItemPickup : BaseMonoBehaviour
     private void Start()
     {
         itemModelStartPos = itemModel.transform.localPosition;
+        
+        switch(item.itemType)
+        {
+            case ItemData.ItemType.Weapon:
+                itemDurability = item.weaponDurability;
+                break;
+
+            case ItemData.ItemType.Shield:
+                itemDurability = item.shieldDurability;
+                break;
+        }
     }
 
     public void GetItem()

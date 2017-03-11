@@ -12,26 +12,41 @@ public class PCAttackState : IPlayableCharacterState
         player = pcStateController;
     }
 
-    private ItemData currentWeapon;
+    
 
     private bool hasQueuedNextAttack; //Determins whether the player has put in input to attack again
-    private int attackCount; //Used to track the index of the attack
+    private static int attackCount; //Used to track the index of the attack
 
-    public static bool CanTakeAttackInput;
-    public static bool CanTakeMovementInput;
+    private static bool CanTakeAttackInput;    
 
-    private bool hasInitiatedNextAttack;
+    private static float animationTimer;   
 
-    public static float animationTimer;
-
+    //Weapon Variables
+    private ItemData currentWeapon;
+    private static float[] weaponAttackCosts;
+    private int weaponDurability;
 
     public void OnEnterState()
     {
-        attackCount = 0;
+        weaponDurability = PCItemInventoryHandler.WeaponDurability;
 
-        currentWeapon = PCItemInventoryHandler.CurrentWeapon;
         player.PCAnimator.SetBool("isAttacking", true);
-        player.PCAnimator.SetInteger("AttackCount", attackCount);        
+        attackCount = 0;
+        player.PCAnimator.SetInteger("AttackCount", attackCount);
+
+        PCItemInventoryHandler.currentWeaponHandler.StartQueuingAttacks();
+        //Shield Overrides the Attack Costs
+        if(player.HasShield)
+        {
+            currentWeapon = PCItemInventoryHandler.CurrentShield;           
+        }
+        else
+        {
+            currentWeapon = PCItemInventoryHandler.CurrentWeapon;            
+        }
+        
+        weaponAttackCosts = currentWeapon.weaponAttackCosts;
+
     }
 
     public void OnUpdateState()
@@ -45,8 +60,6 @@ public class PCAttackState : IPlayableCharacterState
 
             if (hasQueuedNextAttack)
             {
-                //player.PCAnimator.SetBool("isAttacking", true);
-
                 //First Check if we're at the end of the attack runway
                 switch (currentWeapon.weaponWeight)
                 {
@@ -129,53 +142,75 @@ public class PCAttackState : IPlayableCharacterState
     private void QueueLightAttacks()
     {
         attackCount++;
+
         if (attackCount > 1)
             attackCount = 0;
 
-        player.PCAnimator.SetInteger("AttackCount", attackCount);
+        //Check if We Can Afford Attack Cost
+        if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(weaponAttackCosts[attackCount]))
+        {
+            player.PCAnimator.SetInteger("AttackCount", attackCount);
 
-        hasQueuedNextAttack = false;
-        CanTakeAttackInput = false;
-        hasInitiatedNextAttack = true;
+            hasQueuedNextAttack = false;
+            CanTakeAttackInput = false;
+
+            PCItemInventoryHandler.currentWeaponHandler.AddAttackIndexToQueue(attackCount);         
+        }       
     }
 
     private void QueueMediumAttacks()
     {
         attackCount++;
-        player.PCAnimator.SetInteger("AttackCount", attackCount);
+        if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(weaponAttackCosts[attackCount]))
+        {
+            player.PCAnimator.SetInteger("AttackCount", attackCount);
 
-        hasQueuedNextAttack = false;
-        CanTakeAttackInput = false;
-        hasInitiatedNextAttack = true;
+            hasQueuedNextAttack = false;
+            CanTakeAttackInput = false;
+
+            PCItemInventoryHandler.currentWeaponHandler.AddAttackIndexToQueue(attackCount);
+        }   
     }
 
     private void QueueHeavyAttacks()
     {
         attackCount++;
-        player.PCAnimator.SetInteger("AttackCount", attackCount);
 
-        hasQueuedNextAttack = false;
-        CanTakeAttackInput = false;
-        hasInitiatedNextAttack = true;
+        if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(weaponAttackCosts[attackCount]))
+        {
+            player.PCAnimator.SetInteger("AttackCount", attackCount);
+
+            hasQueuedNextAttack = false;
+            CanTakeAttackInput = false;
+
+            PCItemInventoryHandler.currentWeaponHandler.AddAttackIndexToQueue(attackCount);
+        }        
     }
 
     private void CheckForAttackInput()
     {
-
         Player playerControls = ReInput.players.GetPlayer(0);
 
-        if (playerControls.GetButtonDown("Attack") || Input.GetMouseButtonDown(0
-            ))
+        if (playerControls.GetButtonDown("Attack") || Input.GetMouseButtonDown(0))                                                                               
         {
-            hasQueuedNextAttack = true;
-            CanTakeMovementInput = false;
+            hasQueuedNextAttack = true;            
         }
+    }
+
+    //Called from the script on the animation state
+    public static void InitiateAttack(float animationLength)
+    {
+        //Remove Stamina for  Attack
+        PCAttributes.Instance.RemoveStamina(weaponAttackCosts[attackCount]);
+
+        CanTakeAttackInput = true;
+        animationTimer = animationLength;
     }
 
     public void OnExitState(IPlayableCharacterState newState)
     {
         player.PCAnimator.SetBool("isAttacking", false);
-        Debug.Log("Moved to " + newState);
+        //Debug.Log("Moved to " + newState);
         player.CurrentState = newState;
     }
 

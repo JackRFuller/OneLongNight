@@ -194,7 +194,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Get Combat Input & Check We're not Rolling
         if(!isRolling)
         {
-            if(player.GetButton("Attack"))
+            if(player.GetButton("Attack") || Input.GetMouseButton(0))
             {
                 isAttacking = true;
             }
@@ -217,7 +217,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Get Block Input
         if(hasShield)
         {
-            if (player.GetButton("Block"))
+            if (player.GetButton("Block") || Input.GetMouseButton(1))
             {
                 isBlocking = true;
             }

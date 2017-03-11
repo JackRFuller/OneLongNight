@@ -16,6 +16,13 @@ MonoBehaviour:
   weaponWeight: 2
   weaponType: 1
   weaponIndex: 3
+  weaponAttackDamage: []
+  weaponAttackCosts:
+  - 20
+  - 30
+  - 45
+  weaponDurability: 10
   shieldIndex: 0
+  shieldDurability: 0
   movementAnimations: {fileID: 11400000, guid: 22302329f51f6c14e856e9900818fe45, type: 2}
   weaponAnimations: {fileID: 0}

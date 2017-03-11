@@ -50503,7 +50503,7 @@ AnimationClip:
   m_IsEmpty: 0
   m_Events:
   - time: 0.73333335
-    functionName: TestEvent
+    functionName: ToggleWeapon
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

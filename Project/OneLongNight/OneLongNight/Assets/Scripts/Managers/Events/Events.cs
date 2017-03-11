@@ -18,6 +18,7 @@ public class Events
 
     //Combat===========================
     public static string HitEnemy = "HitEnemy"; //Triggered when the player hits an enemy with a weapon
+    public static string UpdateWeaponDurability = "UpdateWeaponDurability"; //Triggered when the player's weapon hits an enemy;
     
 
 }

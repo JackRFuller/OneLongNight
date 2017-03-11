@@ -19,8 +19,12 @@ public class PCIdleState : IPlayableCharacterState
     {
         if(player.IsAttacking)
         {
-            //Check if We Have Enough Stamina to Attack
-            OnExitState(player.attackState);
+            //Check We Have Enough Stamina
+            if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(PCItemInventoryHandler.CurrentWeapon.weaponAttackCosts[0]))
+            {
+                //Check if We Have Enough Stamina to Attack
+                OnExitState(player.attackState);
+            }
         }
 
         //Check For Roll

@@ -12,9 +12,14 @@ public class ItemData : ScriptableObject
     public WeaponWeight weaponWeight;
     public WeaponType weaponType;
     public int weaponIndex;
+    public float[] weaponAttackDamage = new float[4];
+    public float[] weaponAttackCosts = new float[4];
+    public int weaponDurability; //Defines how many attacks a weapon can make before it breaks;
+    public float criticalHitDamage; //Defines how much damage 
 
     [Header("If Shield")]
     public int shieldIndex;
+    public int shieldDurability; //Defines how many hits a shield can take before it breaks;
 
     [Header("Animations")]
     public MovementAnimations movementAnimations;

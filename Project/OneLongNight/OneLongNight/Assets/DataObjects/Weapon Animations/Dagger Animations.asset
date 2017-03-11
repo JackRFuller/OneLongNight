@@ -13,13 +13,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackOneAnim:
     clip: {fileID: 7400000, guid: e0bc5b33b770ab7438d33f4441a5b86c, type: 2}
-    clipSpeed: 0
+    clipSpeed: 1.1
   attackTwoAnim:
     clip: {fileID: 7400000, guid: 0c39ec3eaee7c0b4baded4843b5c512b, type: 2}
-    clipSpeed: 0
+    clipSpeed: 1.2
   attackThreeAnim:
     clip: {fileID: 7400000, guid: 19d2367d71c51d048afc8f706f68cca9, type: 2}
-    clipSpeed: 0
+    clipSpeed: 1
   attackFourAnim:
     clip: {fileID: 7400000, guid: 2f814fa5766730547a957d19a18ce09b, type: 2}
+    clipSpeed: 1
+  criticalHitAnim:
+    clip: {fileID: 0}
     clipSpeed: 0
