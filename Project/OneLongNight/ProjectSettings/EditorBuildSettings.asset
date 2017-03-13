@@ -6,4 +6,4 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scene/Prototyping.unity
+    path: Assets/Scene/CombatPrototype.unity
