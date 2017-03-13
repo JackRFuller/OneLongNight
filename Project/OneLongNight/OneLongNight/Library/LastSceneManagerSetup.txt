@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scene/CombatPrototype.unity
-  isLoaded: 1
-  isActive: 1
