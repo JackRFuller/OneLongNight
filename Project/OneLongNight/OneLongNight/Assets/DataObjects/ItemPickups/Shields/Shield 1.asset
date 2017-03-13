@@ -18,11 +18,12 @@ MonoBehaviour:
   weaponIndex: 0
   weaponAttackDamage: []
   weaponAttackCosts:
-  - 15
-  - 25
-  - 30
-  - 30
+  - 10
+  - 10
+  - 10
+  - 10
   weaponDurability: 20
+  criticalHitDamage: 0
   shieldIndex: 0
   shieldDurability: 0
   movementAnimations: {fileID: 11400000, guid: 7fb113b87f01cd0489832d2b7f78fa56, type: 2}

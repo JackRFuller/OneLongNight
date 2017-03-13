@@ -10,7 +10,7 @@ public class PCPickupState : IPlayableCharacterState
         player = pcStateController;
     }
 
-    private const float timerStartTime = 1.2f;
+    private const float timerStartTime = 0.6f;
     private float timer;
 
     public void OnEnterState()
@@ -22,7 +22,6 @@ public class PCPickupState : IPlayableCharacterState
         Quaternion rotation = Quaternion.LookRotation(lookPos);
 
         player.transform.rotation = rotation;
-
     }
 
     public void OnUpdateState()
@@ -33,11 +32,11 @@ public class PCPickupState : IPlayableCharacterState
         }
         else
         {
-            player.PCAnimator.SetBool("isPickingUp", false);
-
             //Check for Movement
             if (player.MovementVector != Vector3.zero)
             {
+                player.PCAnimator.SetInteger("Movement", 1);
+
                 if (player.IsBlocking)
                 {
                     player.PCAnimator.SetBool("isBlocking", true);
@@ -45,12 +44,15 @@ public class PCPickupState : IPlayableCharacterState
                 }
                 else
                 {
+                    player.PCAnimator.SetBool("isBlocking", false);
                     OnExitState(player.moveState);
                 }
 
             }
             else
             {
+                player.PCAnimator.SetInteger("Movement", 0);
+
                 if (player.IsBlocking)
                 {
                     player.PCAnimator.SetBool("isBlocking", true);
@@ -58,7 +60,7 @@ public class PCPickupState : IPlayableCharacterState
                 }
                 else
                 {
-                    player.PCAnimator.SetInteger("Movement", 0);
+                    player.PCAnimator.SetBool("isBlocking", false);
                     OnExitState(player.idleState);
                 }
             }
@@ -67,6 +69,7 @@ public class PCPickupState : IPlayableCharacterState
 
     public void OnExitState(IPlayableCharacterState newState)
     {
+        player.PCAnimator.SetBool("isPickingUp", false);
         player.CurrentState = newState;
     }
 }

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Name: Sword Animations
   m_EditorClassIdentifier: 
   attackOneAnim:
-    clip: {fileID: 7400000, guid: e0bc5b33b770ab7438d33f4441a5b86c, type: 2}
-    clipSpeed: 1
+    clip: {fileID: 7400000, guid: 29aaa8d3a03c3c548b06879d929d10af, type: 2}
+    clipSpeed: 1.1
   attackTwoAnim:
-    clip: {fileID: 7400000, guid: b46cfd717bf3ad745a83cda27d3c4752, type: 2}
-    clipSpeed: 1
+    clip: {fileID: 7400000, guid: 5a6bfcea48a73324a92af6baf879c8c7, type: 2}
+    clipSpeed: 1.1
   attackThreeAnim:
-    clip: {fileID: 7400000, guid: e0bc5b33b770ab7438d33f4441a5b86c, type: 2}
-    clipSpeed: 1
+    clip: {fileID: 7400000, guid: 29aaa8d3a03c3c548b06879d929d10af, type: 2}
+    clipSpeed: 1.1
   attackFourAnim:
     clip: {fileID: 7400000, guid: 94d1389470b016f4eba9ca802408f687, type: 2}
-    clipSpeed: 1
+    clipSpeed: 1.4

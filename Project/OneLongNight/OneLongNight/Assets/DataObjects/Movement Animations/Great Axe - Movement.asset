@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Great Axe - Movement
   m_EditorClassIdentifier: 
   idleAnim:
-    clip: {fileID: 7400000, guid: a65ce6f1f8a4c5840b62060c8e90e038, type: 2}
+    clip: {fileID: 7400000, guid: b6589734609146f47bee993e73f0a4a4, type: 2}
     clipSpeed: 0
   moveAnim:
     clip: {fileID: 7400000, guid: 9eaf7f2da3c6e5748991212b83808c33, type: 2}

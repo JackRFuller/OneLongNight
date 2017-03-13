@@ -205,7 +205,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
         }
 
         //Used to line up Pickup with Animation
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(0.5f);
 
         //Set New Weapon Model
         currentWeaponIndex = item.weaponIndex;
@@ -279,7 +279,7 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
             }
         }
         //Used to line up Pickup with Animation
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(0.5f);
 
         currentShieldIndex = item.shieldIndex;
         shields[currentShieldIndex].SetActive(true);
@@ -313,20 +313,20 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
        //Conditions
        // 1 - If player picksup a new two handed weapon
        // 2 - If player picks up a shield
+        
+        //Set Up New Animation Clips - Movement
+        overrideController["Idle"] = item.movementAnimations.idleAnim.clip;            
 
-        if(justPickedUpShield || CurrentWeapon.weaponType == ItemData.WeaponType.TwoHanded || !player.HasShield)
+        overrideController["Move"] = item.movementAnimations.moveAnim.clip;
+
+        overrideController["Roll"] = item.movementAnimations.rollAnim.clip;
+
+        overrideController["BlockMove"] = item.movementAnimations.blockingMoveAnim.clip;
+
+        overrideController["BlockIdle"] = item.movementAnimations.blockingIdle.clip;
+
+        if (!justPickedUpShield)
         {
-            //Set Up New Animation Clips - Movement
-            overrideController["Idle"] = item.movementAnimations.idleAnim.clip;            
-
-            overrideController["Move"] = item.movementAnimations.moveAnim.clip;
-
-            overrideController["Roll"] = item.movementAnimations.rollAnim.clip;
-
-            overrideController["BlockMove"] = item.movementAnimations.blockingMoveAnim.clip;
-
-            overrideController["BlockIdle"] = item.movementAnimations.blockingIdle.clip;
-
             //Set Up New Animation Clips - Combat
             overrideController["Attack1"] = item.weaponAnimations.attackOneAnim.clip;
             animator.SetFloat("Attack1Speed", item.weaponAnimations.attackOneAnim.clipSpeed);
@@ -342,8 +342,10 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
 
             animator.runtimeAnimatorController = overrideController;
 
-            justPickedUpShield = false;
+            
         }
+
+        justPickedUpShield = false;       
 
         PickUpFinished = true;
     }

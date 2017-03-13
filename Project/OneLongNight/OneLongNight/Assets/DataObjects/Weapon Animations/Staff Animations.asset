@@ -9,13 +9,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe20f98ada39c4444826ebcd7d19e3e1, type: 3}
-  m_Name: Pitchfork Animations
+  m_Name: Staff Animations
   m_EditorClassIdentifier: 
   attackOneAnim:
-    clip: {fileID: 0}
+    clip: {fileID: 7400000, guid: 6ce112d4af6297d479def46fe96db788, type: 2}
     clipSpeed: 1
   attackTwoAnim:
-    clip: {fileID: 0}
+    clip: {fileID: 7400000, guid: 6ce112d4af6297d479def46fe96db788, type: 2}
     clipSpeed: 1
   attackThreeAnim:
     clip: {fileID: 0}
