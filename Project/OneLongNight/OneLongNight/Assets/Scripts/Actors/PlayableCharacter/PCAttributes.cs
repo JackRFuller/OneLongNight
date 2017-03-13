@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PCAttributes : MonoSingleton<PCAttributes>
 {
-    private const float startingPCStamina = 100.0f;
+    private const float startingPCStamina = 100000.0f;
 
     private float pcStamina;
     public float PCStamina

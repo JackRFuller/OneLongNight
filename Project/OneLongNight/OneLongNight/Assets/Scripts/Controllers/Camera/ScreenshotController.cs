@@ -31,7 +31,7 @@ public class ScreenshotController : BaseMonoBehaviour
 
         byte[] bytes = texture.EncodeToPNG();
 
-        File.WriteAllBytes(Application.dataPath + "/../Screenshot-" + count + ".png", bytes);
+        File.WriteAllBytes(Application.dataPath + "/../../Screenshot-" + count + ".png", bytes);
         count++;
         PlayerPrefs.SetInt("ScreenshotCount", count++);
 

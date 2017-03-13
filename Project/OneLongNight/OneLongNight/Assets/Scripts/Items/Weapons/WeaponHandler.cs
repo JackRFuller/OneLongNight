@@ -13,8 +13,12 @@ public class WeaponHandler : BaseMonoBehaviour
        
     private int attackIndex;
 
+    private Transform playerTransform;
+
     private void Start()
     {
+        playerTransform = PCAttributes.Instance.transform;
+
         weaponCollider = this.GetComponent<Collider>();
         weaponCollider.enabled = false;
     }
@@ -59,12 +63,16 @@ public class WeaponHandler : BaseMonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.tag);
-
         //Find Enemy
         if(other.tag.Equals("Enemy"))
         {
-            Debug.Log("Hit Enemy");
+            ////Look At Enemy
+            //Vector3 lookAtPos = new Vector3(other.transform.position.x,
+            //                                playerTransform.position.y,
+            //                                other.transform.position.z);
+
+            //playerTransform.LookAt(lookAtPos);
+                                            
 
             float _damageToInflict = 0;
 
@@ -84,7 +92,7 @@ public class WeaponHandler : BaseMonoBehaviour
             //Update Durability
             EventManager.TriggerEvent(Events.UpdateWeaponDurability);
 
-            //EventManager.TriggerEvent(Events.HitEnemy);
+            EventManager.TriggerEvent(Events.HitEnemy);
 
         }
     }

@@ -125,7 +125,6 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
 
     public void ToggleWeapon()
     {
-        Debug.Log("Toggle Weapon" + Time.time);
         currentWeaponHandler.ToggleWeapon();
     }
 
