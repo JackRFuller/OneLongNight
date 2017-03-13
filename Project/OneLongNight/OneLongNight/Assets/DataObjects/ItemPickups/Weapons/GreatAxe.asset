@@ -17,14 +17,15 @@ MonoBehaviour:
   weaponType: 1
   weaponIndex: 2
   weaponAttackDamage:
-  - 10
-  - 10
-  - 10
-  - 0
+  - 20
+  - 20
+  - 20
+  - 20
   weaponAttackCosts:
-  - 10
-  - 10
-  - 10
+  - 0
+  - 0
+  - 0
+  - 0
   weaponDurability: 10
   criticalHitDamage: 0
   shieldIndex: 0

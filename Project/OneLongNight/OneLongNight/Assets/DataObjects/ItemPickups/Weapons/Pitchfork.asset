@@ -16,11 +16,16 @@ MonoBehaviour:
   weaponWeight: 2
   weaponType: 1
   weaponIndex: 3
-  weaponAttackDamage: []
+  weaponAttackDamage:
+  - 10
+  - 10
+  - 10
+  - 10
   weaponAttackCosts:
-  - 20
-  - 30
-  - 45
+  - 0
+  - 0
+  - 0
+  - 0
   weaponDurability: 10
   criticalHitDamage: 0
   shieldIndex: 0

@@ -59,9 +59,13 @@ public class WeaponHandler : BaseMonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.tag);
+
         //Find Enemy
         if(other.tag.Equals("Enemy"))
         {
+            Debug.Log("Hit Enemy");
+
             float _damageToInflict = 0;
 
             //Check if the weapon is about to break i.e Durability = 1
