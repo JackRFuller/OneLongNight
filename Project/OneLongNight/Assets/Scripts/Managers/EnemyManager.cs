@@ -50,7 +50,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
             {
                 if(!enemies[i].activeInHierarchy)
                 {
-                    enemies[i].GetComponent<PrototypeEnemyScript>().ResetEnemy();
+                    enemies[i].GetComponent<StatePatternStandardEnemy>().SetUpEnemy();
 
                     //Calculate Random Spawn Point
                     int spawnPoint = Random.Range(0, enemySpawnPoints.Length);

@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class PCAttributes : MonoSingleton<PCAttributes>
 {
+    private const float startingHealth = 100.0f;
+    private float health;
+    public float Health
+    {
+        get
+        {
+            return health;
+        }        
+    }
+
     private const float startingPCStamina = 100000.0f;
 
     private float pcStamina;
@@ -26,6 +36,8 @@ public class PCAttributes : MonoSingleton<PCAttributes>
     private void Start()
     {
         pcStamina = startingPCStamina;
+        health = startingHealth;
+
         cooldownRoutine = CooldownToStartStaminaRegneration();
     }
 
@@ -66,6 +78,22 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         if(pcStamina >= 100.0f)
         {
             isRegeneratingStamina = false;
+        }
+    }
+
+    public void HitByEnemy(float _damageTaken)
+    {
+        //Take Away Health
+        health -= _damageTaken;
+
+        EventManager.TriggerEvent(Events.HitByEnemy);
+
+        if(health <= 0)
+        {
+            EventManager.TriggerEvent(Events.PlayerDied);
+            
+
+            this.GetComponent<Collider>().enabled = false;
         }
     }
 }
