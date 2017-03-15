@@ -73,8 +73,47 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         }
     }
 
+    [Header("Field of View")]
+    [SerializeField]
+    private float viewRadius;
+    public float ViewRadius
+    {
+        get
+        {
+            return viewRadius;
+        }
+    }
+    [SerializeField]
+    [Range(0,360)]
+    private float viewAngle;
+    public float ViewAngle
+    {
+        get
+        {
+            return viewAngle;
+        }
+    }
+
     //Combat========================================================================================================
     [Header("Combat")]
+    [SerializeField]
+    private LayerMask targetMask;
+    public LayerMask TargetMask
+    {
+        get
+        {
+            return targetMask;
+        }
+    }
+    [SerializeField]
+    private LayerMask obstacleMask;
+    public LayerMask ObstableMask
+    {
+        get
+        {
+            return obstacleMask;
+        }
+    }
     [SerializeField]
     private float maxHealth;
     private float health;
@@ -165,6 +204,49 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         }
 
     }
+
+    #region Field Of View
+
+    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
+    {
+        if(!angleIsGlobal)
+        {
+            angleInDegrees += transform.eulerAngles.y;
+        }
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+
+    public bool CanAttack()
+    {
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, ViewRadius, targetMask);
+
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        {
+            Transform target = targetsInViewRadius[i].transform;
+            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            {
+                float dstToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    #endregion
 
 
 

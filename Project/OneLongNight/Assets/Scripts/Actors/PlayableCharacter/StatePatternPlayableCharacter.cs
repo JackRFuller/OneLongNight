@@ -70,6 +70,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     [HideInInspector] public PCRollState rollState;
     [HideInInspector] public PCPickupState pickUpState;
     [HideInInspector] public PCAttackState attackState;
+    [HideInInspector] public PCDeathState deathState;
 
     //Inputs =========================================================================
     //Movement
@@ -118,6 +119,16 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        EventManager.StartListening(Events.PlayerDied, PlayerHasDied);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(Events.PlayerDied, PlayerHasDied);
+    }
+
     private void Start()
     {
         pcAnimator = this.GetComponent<Animator>();
@@ -129,6 +140,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         rollState = new PCRollState(this);
         blockMoveState = new PCBlockMoveState(this);
         pickUpState = new PCPickupState(this);
+        deathState = new PCDeathState(this);
 
         attackState = new PCAttackState(this);
         
@@ -167,6 +179,11 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 //            Debug.Log(currentState);
 //        }
         
+    }
+
+    private void PlayerHasDied()
+    {
+        currentState = deathState;
     }
 
     private void GetInputs()

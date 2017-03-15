@@ -92,7 +92,6 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         {
             EventManager.TriggerEvent(Events.PlayerDied);
             
-
             this.GetComponent<Collider>().enabled = false;
         }
     }

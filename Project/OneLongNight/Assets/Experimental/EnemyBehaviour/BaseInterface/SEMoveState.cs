@@ -32,12 +32,15 @@ public class SEMoveState : IEnemyState
         //If Within Range Then Attack
         if (distToPC < enemy.DistanceToPCToAttack)
         {
-            //Move To Attack
-            OnExitState(enemy.attackState);
-            
+            //Check if Enemy is Within Line of Sight
+            if(enemy.CanAttack())
+            {
+                //Move To Attack
+                OnExitState(enemy.attackState);
+            }
         }
-
     }
+    
 
     public void OnExitState(IEnemyState newState)
     {

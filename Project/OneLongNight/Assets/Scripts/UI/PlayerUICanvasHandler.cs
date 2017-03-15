@@ -39,7 +39,7 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
     private CanvasGroup deathMessage;
     private float startAlpha = 0;
     private float targetAlpha = 1;
-    private float deathMessageLerpSpeed = 2f;
+    private float deathMessageLerpSpeed = 4f;
     private float timeStartedLerpingDM;
     private bool isLerpingDM;
 

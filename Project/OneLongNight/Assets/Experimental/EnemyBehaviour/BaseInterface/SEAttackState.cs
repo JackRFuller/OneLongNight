@@ -32,8 +32,17 @@ public class SEAttackState : IEnemyState
 
             if(distToPC < enemy.DistanceToPCToAttack)
             {
-                //Reset Timer
-                attackTimer = 2.1f;
+                if(enemy.CanAttack())
+                {
+                    //Reset Timer
+                    attackTimer = 2.1f;
+                }
+                else
+                {
+                    //Start Moving
+                    OnExitState(enemy.moveState);
+                }
+               
             }
             else
             {
