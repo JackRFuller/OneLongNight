@@ -14,7 +14,7 @@ public class SEDeathState : IEnemyState
     public void OnEnterState()
     {
         enemy.EnemyAnim.SetBool("isDead", true);
-        deathTimer = 1.5f;
+        deathTimer = 2f;
     }
 
     public void OnUpdateState()

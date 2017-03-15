@@ -49,6 +49,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
     [HideInInspector] public SEMoveState moveState;
     [HideInInspector] public SEAttackState attackState;
+    [HideInInspector] public SEStaggerState staggerState;
     [HideInInspector] public SEDeathState deathState;
 
     //Movement======================================================================================================
@@ -135,6 +136,15 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
     }
     [SerializeField]
     private float attackDamage;
+    [Range(0, 1)]
+    private float staggeredDirection;
+    public float StaggeredDirection
+    {
+        get
+        {
+            return staggeredDirection;
+        }
+    }
     
 
     private void Start()
@@ -168,6 +178,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         //Create States
         moveState = new SEMoveState(this);
         attackState = new SEAttackState(this);
+        staggerState = new SEStaggerState(this);
         deathState = new SEDeathState(this);
 
         currentState = moveState;
@@ -188,22 +199,34 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         }
     }
 
-    private void HitByPlayer(float _damage)
+    private void HitByPlayer(HitInfo hitInfo)
     {
-        UpdateHealth(_damage);
-    }
-
-    private void UpdateHealth(float _damageTaken)
-    {
-        health -= _damageTaken;
+        health -= hitInfo.damage;
         enemyUI.UpdateHealthBar(health);
 
-        if(health <= 0)
+        if (health <= 0)
         {
             CurrentState = deathState;
         }
+        else
+        {
+            //Stagger
+            //Determine Side
+            Vector3 relativePoint = transform.InverseTransformPoint(hitInfo.hitDirection);
 
+            if (relativePoint.x < 0)
+                staggeredDirection = 0;
+
+            if (relativePoint.x >= 0)
+                staggeredDirection = 1;
+
+            //Set Staggered State
+            currentState = staggerState;
+        }
+        
+        
     }
+    
 
     #region Field Of View
 

@@ -66,13 +66,13 @@ public class WeaponHandler : BaseMonoBehaviour
         //Find Enemy
         if(other.tag.Equals("Enemy"))
         {
-            ////Look At Enemy
-            //Vector3 lookAtPos = new Vector3(other.transform.position.x,
-            //                                playerTransform.position.y,
-            //                                other.transform.position.z);
+            Vector3 pointOfContact = Vector3.zero;
+            RaycastHit hit;
 
-            //playerTransform.LookAt(lookAtPos);
-                                            
+            if(Physics.Raycast(transform.position,transform.forward,out hit))
+            {
+                pointOfContact = hit.point;
+            }
 
             float _damageToInflict = 0;
 
@@ -86,8 +86,14 @@ public class WeaponHandler : BaseMonoBehaviour
                 _damageToInflict = damageToInflict[attackIndexes[attackIndex]];
             }
 
+            //Create Hit Info Class
+            HitInfo hitInfo = new HitInfo();
+
+            hitInfo.damage = _damageToInflict;
+            hitInfo.hitDirection = pointOfContact;
+
             //Send Damage
-            other.SendMessage("HitByPlayer", _damageToInflict, SendMessageOptions.DontRequireReceiver);
+            other.SendMessage("HitByPlayer", hitInfo, SendMessageOptions.DontRequireReceiver);
 
             //Update Durability
             EventManager.TriggerEvent(Events.UpdateWeaponDurability);

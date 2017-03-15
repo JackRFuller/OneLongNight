@@ -2705,8 +2705,8 @@ MonoBehaviour:
   enemyWeapon: {fileID: 114537517731238476}
   enemyAnim: {fileID: 95139482853621506}
   movementSpeed: 1.2
-  viewRadius: 2.6
-  viewAngle: 39
+  viewRadius: 2
+  viewAngle: 37
   targetMask:
     serializedVersion: 2
     m_Bits: 256
@@ -3227,7 +3227,7 @@ NavMeshAgent:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1104175015168940}
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.8
   m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 99
