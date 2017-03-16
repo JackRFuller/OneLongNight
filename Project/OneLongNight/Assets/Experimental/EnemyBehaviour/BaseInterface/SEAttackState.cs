@@ -11,10 +11,22 @@ public class SEAttackState : IEnemyState
     }
 
     private float attackTimer;
+    private float attackCooldownTimer;
+
+    private int attackCount = 0;
 
     public void OnEnterState()
     {
+        //Stop Movement
+        enemy.NavAgent.Stop();  
+        enemy.NavAgent.speed = 0;
+        
+
+        attackCooldownTimer = enemy.AttackCooldownTime;
         attackTimer = 2.1f;
+        attackCount = 0;
+
+        enemy.EnemyAnim.SetInteger("AttackCount", attackCount);
         enemy.EnemyAnim.SetBool("isAttacking", true);
     }
 
@@ -27,28 +39,44 @@ public class SEAttackState : IEnemyState
         }
         else
         {
-            //CHeck How Close We Are To The Player
-            float distToPC = Vector3.Distance(enemy.transform.position, enemy.Target.position);
-
-            if(distToPC < enemy.DistanceToPCToAttack)
+            if(attackCooldownTimer > 0)
             {
-                if(enemy.CanAttack())
+                attackCooldownTimer -= Time.deltaTime;
+            }
+            else
+            {
+                //CHeck How Close We Are To The Player
+                float distToPC = Vector3.Distance(enemy.transform.position, enemy.Target.position);
+
+                if (distToPC < enemy.DistanceToPCToAttack)
                 {
-                    //Reset Timer
-                    attackTimer = 2.1f;
+                    if (enemy.CanAttack())
+                    {
+                        //Reset Timer
+                        attackTimer = 2.1f;
+                        attackCooldownTimer = enemy.AttackCooldownTime;
+
+                        //increment Attack Count
+                        attackCount++;
+                        if (attackCount > 1)
+                            attackCount = 0;
+
+                        enemy.EnemyAnim.SetInteger("AttackCount", attackCount);
+
+                    }
+                    else
+                    {
+                        //Start Moving
+                        OnExitState(enemy.moveState);
+                    }
+
                 }
                 else
                 {
                     //Start Moving
                     OnExitState(enemy.moveState);
-                }
-               
-            }
-            else
-            {
-                //Start Moving
-                OnExitState(enemy.moveState);
 
+                }
             }
         }
     }
@@ -56,7 +84,6 @@ public class SEAttackState : IEnemyState
     public void OnExitState(IEnemyState newState)
     {
         enemy.EnemyAnim.SetBool("isAttacking", false);
-
         enemy.CurrentState = newState;
     }
 }

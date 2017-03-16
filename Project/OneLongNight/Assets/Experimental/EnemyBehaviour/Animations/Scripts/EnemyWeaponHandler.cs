@@ -4,13 +4,32 @@ using UnityEngine;
 
 public class EnemyWeaponHandler : BaseMonoBehaviour
 {
-    public float weaponDamage;
+    [HideInInspector] public Transform wielder;
+    [HideInInspector] public float weaponDamage;
+
+    private void Start()
+    {
+        this.GetComponent<Collider>().enabled = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
-            other.SendMessage("HitByEnemy",weaponDamage, SendMessageOptions.DontRequireReceiver);
+            Vector3 pointOfContact = Vector3.zero;
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit))
+            {
+                pointOfContact = hit.point;
+            }
+
+            HitInfo hitInfo = new HitInfo();
+            hitInfo.attacker = wielder;
+            hitInfo.hitDirection = pointOfContact;
+            hitInfo.damage = weaponDamage;
+
+            other.SendMessage("HitByEnemy",hitInfo, SendMessageOptions.DontRequireReceiver);
         }
     }
 }

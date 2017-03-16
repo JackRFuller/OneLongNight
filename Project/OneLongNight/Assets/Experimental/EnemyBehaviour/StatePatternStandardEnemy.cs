@@ -29,6 +29,11 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
             return navAgent;
         }
     }
+    [SerializeField]
+    private Texture[] materialTexs;
+    [SerializeField]
+    private SkinnedMeshRenderer characterMesh;
+    private Material currentMat;
 
     //States========================================================================================================
 
@@ -136,6 +141,15 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
     }
     [SerializeField]
     private float attackDamage;
+    [SerializeField]
+    private float attackCooldownTime;
+    public float AttackCooldownTime
+    {
+        get
+        {
+            return attackCooldownTime;
+        }
+    }
     [Range(0, 1)]
     private float staggeredDirection;
     public float StaggeredDirection
@@ -154,6 +168,10 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
     public void SetUpEnemy()
     {
+        currentMat = characterMesh.material;
+
+        currentMat.mainTexture = materialTexs[(Random.Range(0, materialTexs.Length))];
+
         enemyMeshTransform.localPosition = Vector3.zero;
         
         if(!enemyAnim.isInitialized)
@@ -165,6 +183,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         enemyUI.SetHealthAttributes(maxHealth);
 
         //Set Attributes
+        enemyWeapon.wielder = this.transform;
         enemyWeapon.weaponDamage = attackDamage;
         health = maxHealth;
 
@@ -201,6 +220,9 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
     private void HitByPlayer(HitInfo hitInfo)
     {
+        //Turn Off Weapon Collider
+        enemyWeapon.GetComponent<Collider>().enabled = false;
+
         health -= hitInfo.damage;
         enemyUI.UpdateHealthBar(health);
 

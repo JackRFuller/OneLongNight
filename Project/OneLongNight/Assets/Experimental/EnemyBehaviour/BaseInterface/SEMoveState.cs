@@ -13,6 +13,8 @@ public class SEMoveState : IEnemyState
 
     public void OnEnterState()
     {
+        enemy.NavAgent.Resume();
+
         //Set Nav Mesh Speed
         enemy.NavAgent.destination = enemy.Target.position;
         enemy.NavAgent.speed = enemy.MovementSpeed;

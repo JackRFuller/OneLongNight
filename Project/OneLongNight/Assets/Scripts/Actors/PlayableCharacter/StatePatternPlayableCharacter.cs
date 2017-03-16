@@ -69,8 +69,23 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     [HideInInspector] public PCBlockMoveState blockMoveState;
     [HideInInspector] public PCRollState rollState;
     [HideInInspector] public PCPickupState pickUpState;
+    [HideInInspector] public PCStaggerState staggerState;
     [HideInInspector] public PCAttackState attackState;
     [HideInInspector] public PCDeathState deathState;
+
+    //Combat=========================================================================
+    [Header("Combat")]
+    [SerializeField]
+    private float staggerCooldown; //How soon after being hit can the player move
+    public float StaggerCooldown
+    {
+        get
+        {
+            return staggerCooldown;
+        }
+    }    
+    public static Transform attackingEnemy;
+    public static Vector3 hitDirection;
 
     //Inputs =========================================================================
     //Movement
@@ -119,13 +134,17 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
+    
+
     private void OnEnable()
     {
+        EventManager.StartListening(Events.PlayerStaggered, PlayerIsStaggered);
         EventManager.StartListening(Events.PlayerDied, PlayerHasDied);
     }
 
     private void OnDisable()
     {
+        EventManager.StopListening(Events.PlayerStaggered, PlayerIsStaggered);
         EventManager.StopListening(Events.PlayerDied, PlayerHasDied);
     }
 
@@ -140,6 +159,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         rollState = new PCRollState(this);
         blockMoveState = new PCBlockMoveState(this);
         pickUpState = new PCPickupState(this);
+        staggerState = new PCStaggerState(this);
         deathState = new PCDeathState(this);
 
         attackState = new PCAttackState(this);
@@ -180,6 +200,11 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 //        }
         
     }
+
+    private void PlayerIsStaggered()
+    {
+        currentState = staggerState;
+    } 
 
     private void PlayerHasDied()
     {

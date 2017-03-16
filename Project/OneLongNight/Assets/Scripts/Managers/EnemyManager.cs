@@ -45,21 +45,33 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
         while(spawnIn)
         {
+            int numberOfActiveEnemies = 0;
+
             //Spawn In 
             for(int i = 0; i < enemies.Count; i++)
             {
-                if(!enemies[i].activeInHierarchy)
+                if (enemies[i].activeInHierarchy)
+                    numberOfActiveEnemies++;                
+            }
+
+            if (numberOfActiveEnemies < 4)
+            {
+                for (int i = 0; i < enemies.Count; i++)
                 {
-                    enemies[i].GetComponent<StatePatternStandardEnemy>().SetUpEnemy();
+                    if (!enemies[i].activeInHierarchy)
+                    {
+                        enemies[i].GetComponent<StatePatternStandardEnemy>().SetUpEnemy();
 
-                    //Calculate Random Spawn Point
-                    int spawnPoint = Random.Range(0, enemySpawnPoints.Length);
+                        //Calculate Random Spawn Point
+                        int spawnPoint = Random.Range(0, enemySpawnPoints.Length);
 
-                    enemies[i].transform.position = enemySpawnPoints[spawnPoint].position;
-                    enemies[i].SetActive(true);
-                    break;
+                        enemies[i].transform.position = enemySpawnPoints[spawnPoint].position;
+                        enemies[i].SetActive(true);
+                        break;
+                    }
                 }
             }
+
             //Calculate Wait Time For Next Enemy
             float waitTime = Random.Range(1.0f, 5.0f);
 

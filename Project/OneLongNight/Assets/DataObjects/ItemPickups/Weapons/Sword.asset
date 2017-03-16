@@ -18,9 +18,9 @@ MonoBehaviour:
   weaponIndex: 0
   weaponAttackDamage:
   - 25
-  - 25
-  - 25
-  - 25
+  - 30
+  - 35
+  - 40
   weaponAttackCosts:
   - 0
   - 0

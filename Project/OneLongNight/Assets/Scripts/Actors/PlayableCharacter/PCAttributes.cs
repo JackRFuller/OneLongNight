@@ -81,11 +81,13 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         }
     }
 
-    public void HitByEnemy(float _damageTaken)
+    public void HitByEnemy(HitInfo hitInfo)
     {
         //Take Away Health
-        health -= _damageTaken;
+        health -= hitInfo.damage;
 
+        //Determine Hit Direction
+        CameraScreenShake.Instance.TestShake();
         EventManager.TriggerEvent(Events.HitByEnemy);
 
         if(health <= 0)
@@ -93,6 +95,13 @@ public class PCAttributes : MonoSingleton<PCAttributes>
             EventManager.TriggerEvent(Events.PlayerDied);
             
             this.GetComponent<Collider>().enabled = false;
+        }
+        else
+        {
+            StatePatternPlayableCharacter.hitDirection = hitInfo.hitDirection;           
+            StatePatternPlayableCharacter.attackingEnemy = hitInfo.attacker;
+
+            EventManager.TriggerEvent(Events.PlayerStaggered);
         }
     }
 }

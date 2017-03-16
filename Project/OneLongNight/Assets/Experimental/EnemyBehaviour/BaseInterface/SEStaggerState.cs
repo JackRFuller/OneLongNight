@@ -14,6 +14,10 @@ public class SEStaggerState : IEnemyState
 
     public void OnEnterState()
     {
+        //Turn Off Navmesh
+        enemy.NavAgent.speed = 0;
+        enemy.NavAgent.Stop();
+
         //Turn off Previous ANimations
         enemy.EnemyAnim.SetBool("isAttacking", false);
         enemy.EnemyAnim.SetBool("isMoving", false);
@@ -22,7 +26,7 @@ public class SEStaggerState : IEnemyState
         enemy.EnemyAnim.SetFloat("Stagger", enemy.StaggeredDirection);        
         enemy.EnemyAnim.SetBool("isStaggered", true);
 
-        staggerTime = 1f;
+        staggerTime = 1.5f;
     }
 
     public void OnUpdateState()

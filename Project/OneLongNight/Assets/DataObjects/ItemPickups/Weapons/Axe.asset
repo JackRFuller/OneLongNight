@@ -17,10 +17,10 @@ MonoBehaviour:
   weaponType: 0
   weaponIndex: 1
   weaponAttackDamage:
-  - 10
-  - 10
-  - 10
-  - 10
+  - 20
+  - 20
+  - 20
+  - 20
   weaponAttackCosts:
   - 0
   - 0

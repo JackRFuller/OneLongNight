@@ -7,6 +7,8 @@ public class PCCameraController : BaseMonoBehaviour
 	[SerializeField]
 	private StatePatternPlayableCharacter player;
 
+    //Camera Follow
+
     public Collider target;
     public Vector3 focusAreaSize;
     private FocusArea focusArea;
@@ -30,6 +32,13 @@ public class PCCameraController : BaseMonoBehaviour
 
     private bool lookAheadStoppedX;
     private bool lookAheadStoppedZ;
+    private CameraMode currentCameraMode = CameraMode.Following;
+
+    private enum CameraMode
+    {
+        Following,
+        Shaking,
+    }
 
     private void Start()
     {
@@ -37,9 +46,32 @@ public class PCCameraController : BaseMonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         focusArea = new FocusArea(target.bounds, focusAreaSize);
+
+        
+
     }
 
+    public void TurnCameraFollowOn()
+    {
+        currentCameraMode = CameraMode.Following;
+    }
+
+    public void TurnCameraFollowOff()
+    {
+        currentCameraMode = CameraMode.Shaking;
+    }
+       
+#region CameraFollow
+
     public override void UpdateLate()
+    {
+        if(currentCameraMode == CameraMode.Following)
+        {
+            CameraFollow();
+        }
+    }
+
+    private void CameraFollow()
     {
         focusArea.Update(target.bounds);
 
@@ -49,31 +81,31 @@ public class PCCameraController : BaseMonoBehaviour
 
         Vector3 focusPosition = new Vector3(newX, newY, newZ);
 
-        if(focusArea.velocity.x != 0)
+        if (focusArea.velocity.x != 0)
         {
             lookAheadDirX = Mathf.Sign(focusArea.velocity.x);
 
-			if(Mathf.Sign(player.MovementVector.x) == Mathf.Sign(focusArea.velocity.x) && player.MovementVector.x != 0)
+            if (Mathf.Sign(player.MovementVector.x) == Mathf.Sign(focusArea.velocity.x) && player.MovementVector.x != 0)
             {
                 lookAheadStoppedX = false;
                 targetLookAheadX = lookAheadDirX * lookAheadDst;
             }
             else
             {
-                if(!lookAheadStoppedX)
+                if (!lookAheadStoppedX)
                 {
                     targetLookAheadX = currenLookAheadX + (lookAheadDirX * lookAheadDst - currenLookAheadX) / 4f;
                     lookAheadStoppedX = true;
                 }
-                   
+
             }
         }
 
-        if(focusArea.velocity.z != 0)
+        if (focusArea.velocity.z != 0)
         {
             lookAheadDirZ = Mathf.Sign(focusArea.velocity.z);
 
-			if (Mathf.Sign(player.MovementVector.z) == Mathf.Sign(focusArea.velocity.z) && player.MovementVector.z != 0)
+            if (Mathf.Sign(player.MovementVector.z) == Mathf.Sign(focusArea.velocity.z) && player.MovementVector.z != 0)
             {
                 lookAheadStoppedZ = false;
                 targetLookAheadZ = lookAheadDirZ * lookAheadDst;
@@ -89,7 +121,7 @@ public class PCCameraController : BaseMonoBehaviour
             }
         }
 
-        
+
         currenLookAheadX = Mathf.SmoothDamp(currenLookAheadX, targetLookAheadX, ref smoothLookVelocityX, lookSmoothTime);
         currentLookAheadZ = Mathf.SmoothDamp(currentLookAheadZ, targetLookAheadZ, ref smoothLookVelocityZ, lookSmoothTime);
 
@@ -97,7 +129,7 @@ public class PCCameraController : BaseMonoBehaviour
         focusPosition += Vector3.right * currenLookAheadX;
 
         transform.position = focusPosition;
-    }
+    }                                                                        
 
     public void OnDrawGizmos()
     {
@@ -167,4 +199,6 @@ public class PCCameraController : BaseMonoBehaviour
             velocity = new Vector3(shiftX, 0, shiftZ);
         }
     }
+
+#endregion
 }

@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraScreenShake : BaseMonoBehaviour
+public class CameraScreenShake : MonoSingleton<CameraScreenShake>
 {
+
+    [SerializeField]
+    private PCCameraController cameraController;
+
     private const float maxAngle = 10f;
-    public Properties testProperties;
+    public CameraShakeProperties testProperties;
     private IEnumerator currentShakeCorountine;
-    
-    public void StartShake(Properties properties)
+   
+    public void TestShake()
     {
-        if(currentShakeCorountine != null)
+        StartShake(testProperties);
+    }
+
+    public void StartShake(CameraShakeProperties properties)
+    {
+        if (currentShakeCorountine != null)
         {
             StopCoroutine(currentShakeCorountine);
         }
@@ -19,8 +28,11 @@ public class CameraScreenShake : BaseMonoBehaviour
         StartCoroutine(currentShakeCorountine);
     }
 
-    IEnumerator Shake(Properties properties)
+    IEnumerator Shake(CameraShakeProperties properties)
     {
+        cameraController.TurnCameraFollowOff();
+        
+
         float completionPercent = 0;
         float movePercent = 0;
 
@@ -58,6 +70,8 @@ public class CameraScreenShake : BaseMonoBehaviour
             yield return null;
         }
         while (moveDistance > 0);
+
+        cameraController.TurnCameraFollowOn();
     }
 
     float DampingCurve(float x, float dampingPercent)
@@ -68,18 +82,4 @@ public class CameraScreenShake : BaseMonoBehaviour
         return b * b * b;
     }
 
-    [System.Serializable]
-    public class Properties
-    {
-        public float angle;
-        public float strength;
-        public float speed;
-        public float duration;
-        [Range(0,1)]
-        public float noisePercent;
-        [Range(0, 1)]
-        public float dampingPercent;
-        [Range(0, 1)]
-        public float rotationPercent;
-    }
 }
