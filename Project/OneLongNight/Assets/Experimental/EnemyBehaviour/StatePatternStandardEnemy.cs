@@ -248,6 +248,12 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         
         
     }
+
+    private void BlockedByEnemy()
+    {
+        //Set Staggered State
+        currentState = staggerState;
+    }
     
 
     #region Field Of View

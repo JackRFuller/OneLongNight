@@ -98,7 +98,7 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
     private void UpdateHealthBar()
     {
         //Set Health Bar To Current Health
-        float health = PCAttributes.Instance.Health;
+        float health = PCAttributes.Health;
 
         //Change Fill Amount
         float fillAmount = health / 100.0f;

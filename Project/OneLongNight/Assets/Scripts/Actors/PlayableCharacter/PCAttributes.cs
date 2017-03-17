@@ -5,13 +5,17 @@ using UnityEngine;
 public class PCAttributes : MonoSingleton<PCAttributes>
 {
     private const float startingHealth = 100.0f;
-    private float health;
-    public float Health
+    private static float health;
+    public static float Health
     {
         get
         {
             return health;
-        }        
+        }  
+        set
+        {
+            health = value;
+        }      
     }
 
     private const float startingPCStamina = 100000.0f;
@@ -78,30 +82,6 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         if(pcStamina >= 100.0f)
         {
             isRegeneratingStamina = false;
-        }
-    }
-
-    public void HitByEnemy(HitInfo hitInfo)
-    {
-        //Take Away Health
-        health -= hitInfo.damage;
-
-        //Determine Hit Direction
-        CameraScreenShake.Instance.TestShake();
-        EventManager.TriggerEvent(Events.HitByEnemy);
-
-        if(health <= 0)
-        {
-            EventManager.TriggerEvent(Events.PlayerDied);
-            
-            this.GetComponent<Collider>().enabled = false;
-        }
-        else
-        {
-            StatePatternPlayableCharacter.hitDirection = hitInfo.hitDirection;           
-            StatePatternPlayableCharacter.attackingEnemy = hitInfo.attacker;
-
-            EventManager.TriggerEvent(Events.PlayerStaggered);
         }
     }
 }

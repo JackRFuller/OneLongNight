@@ -1967,6 +1967,21 @@ Prefab:
       propertyPath: staggerCooldown
       value: 1.1
       objectReference: {fileID: 0}
+    - target: {fileID: 114339381410489714, guid: 5cdd6084b048bda46b44824ca6dc65cf,
+        type: 2}
+      propertyPath: viewRadius
+      value: 2.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339381410489714, guid: 5cdd6084b048bda46b44824ca6dc65cf,
+        type: 2}
+      propertyPath: viewAngle
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339381410489714, guid: 5cdd6084b048bda46b44824ca6dc65cf,
+        type: 2}
+      propertyPath: targetMask.m_Bits
+      value: 4096
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 54192556731455222, guid: 5cdd6084b048bda46b44824ca6dc65cf, type: 2}
     - {fileID: 64697983830667404, guid: 5cdd6084b048bda46b44824ca6dc65cf, type: 2}
@@ -5128,6 +5143,11 @@ Prefab:
       propertyPath: materialTexs.Array.data[2]
       value: 
       objectReference: {fileID: 2800000, guid: d4f03acc8970b2845b1d4c3c26627b72, type: 3}
+    - target: {fileID: 137944544345876624, guid: d73ef03fa4bb42e46ae87e97254d880a,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c48e6085fe7e7f42be493f6ba01c6f3, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d73ef03fa4bb42e46ae87e97254d880a, type: 2}
   m_IsPrefabParent: 0

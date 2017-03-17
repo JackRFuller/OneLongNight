@@ -87,6 +87,31 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     public static Transform attackingEnemy;
     public static Vector3 hitDirection;
 
+    [Header("Blocking Attributes")]
+    [SerializeField]
+    private float viewRadius;
+    public float ViewRadius
+    {
+        get
+        {
+            return viewRadius;
+        }
+    }
+    [SerializeField]
+    private float viewAngle;
+    public float ViewAngle
+    {
+        get
+        {
+            return viewAngle;
+        }
+    }
+    [SerializeField]
+    private LayerMask targetMask;
+    [SerializeField]
+    private LayerMask obstacleMask;
+    private Transform attacker;
+
     //Inputs =========================================================================
     //Movement
     private Vector3 movementVector;
@@ -210,6 +235,115 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     {
         currentState = deathState;
     }
+
+    public void HitByEnemy(HitInfo hitInfo)
+    {
+        attacker = hitInfo.attacker;
+
+        //Check if We're Blocking
+        if(isBlocking)
+        {
+            //Check if Attacker is in field of view
+            if(CanBlock())
+            {
+                Debug.Log("Blocked Successfully");
+                CameraScreenShake.Instance.TestShake();
+                attacker.SendMessage("BlockedByEnemy", SendMessageOptions.DontRequireReceiver);
+            }
+            else
+            {
+                HurtByEnemy(hitInfo);
+            }
+        }
+        else
+        {
+            HurtByEnemy(hitInfo);
+        }
+
+       
+    }
+
+    /// <summary>
+    /// Called if the player doesn't successfully block
+    /// </summary>
+    void HurtByEnemy(HitInfo hitInfo)
+    {
+        //Take Away Health
+        PCAttributes.Health -= hitInfo.damage;
+
+        //Determine Hit Direction
+        CameraScreenShake.Instance.TestShake();
+        EventManager.TriggerEvent(Events.HitByEnemy);
+
+        if (PCAttributes.Health <= 0)
+        {
+            EventManager.TriggerEvent(Events.PlayerDied);
+
+            this.GetComponent<Collider>().enabled = false;
+        }
+        else
+        {
+            hitDirection = hitInfo.hitDirection;
+            attackingEnemy = hitInfo.attacker;
+
+            EventManager.TriggerEvent(Events.PlayerStaggered);
+        }
+    }
+
+    #region Field Of View
+
+    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
+    {
+        if (!angleIsGlobal)
+        {
+            angleInDegrees += transform.eulerAngles.y + 45;
+        }
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+
+    public bool CanBlock()
+    {
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, ViewRadius, targetMask);
+
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        {
+            if(attacker.gameObject == targetsInViewRadius[i].gameObject)
+            {
+                Debug.Log("Found Attacker");
+
+                Transform target = targetsInViewRadius[i].transform;
+
+                Vector3 dirToTarget = (target.position - transform.position).normalized;
+
+                if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+                {
+                    float dstToTarget = Vector3.Distance(transform.position, target.position);
+
+                    if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                Debug.Log("Could Not Find Attacker");
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    #endregion
 
     private void GetInputs()
     {
