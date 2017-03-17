@@ -12,7 +12,7 @@ public class PCIdleState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-
+        
     }
 
     public void OnUpdateState()

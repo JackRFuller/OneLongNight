@@ -26,6 +26,27 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
+    [Header("Movement")]
+    [SerializeField]
+    private Transform target;
+    public Transform Target
+    {
+        get
+        {
+            return target;
+        }
+    }
+    [SerializeField]
+    private Transform cameraTarget;
+    public Transform CameraTarget
+    {
+        get
+        {
+             return cameraTarget;
+        }
+    }
+    public Transform targetHolder;
+
     //Item Pickups================================================================
     [Header("Items")]
     [SerializeField]
@@ -176,6 +197,9 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     private void Start()
     {
         pcAnimator = this.GetComponent<Animator>();
+
+        //Movement
+        target.position = this.transform.position;
 
         //Get States - Movement
         idleState = new PCIdleState(this);

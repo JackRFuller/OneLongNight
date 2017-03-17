@@ -46,7 +46,8 @@ public class PCMoveState : IPlayableCharacterState
             //Check we're not standing still
             if(player.MovementVector != Vector3.zero)
             {
-                player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+                
+               
 
                 //Check if We're Blocking
                 if (player.IsBlocking)
@@ -56,6 +57,8 @@ public class PCMoveState : IPlayableCharacterState
                 }
 
                 player.PCAnimator.SetInteger("Movement", 1);
+
+                player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
 
             }
             else
