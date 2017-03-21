@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class ItemManager : MonoSingleton<ItemManager>
 {
+    [Header("Consumables")]
+    [SerializeField]
+    private GameObject healthPotion;
+    [SerializeField]
+    private GameObject healthZone;
+    public GameObject HealthZone
+    {
+        get
+        {
+            return healthZone;
+        }
+    }
+
     [Header("Shields")]
     [SerializeField]
     private GameObject[] shieldPickupPrefabs;

@@ -232,6 +232,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         }
         else
         {
+            CameraScreenShake.Instance.TestShake();
             //Stagger
             //Determine Side
             Vector3 relativePoint = transform.InverseTransformPoint(hitInfo.hitDirection);

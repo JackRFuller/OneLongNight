@@ -135,6 +135,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     //Inputs =========================================================================
     //Movement
+    private int frameWait;
+
     private Vector3 movementVector;
     public Vector3 MovementVector
     {
@@ -231,6 +233,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 			currentState.OnEnterState();
 
 			lastState = currentState;
+            Debug.Log("New State " + currentState);
 		}
 		else
 		{
@@ -373,8 +376,35 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     {
         Player player = ReInput.players.GetPlayer(0);
 
+        
+        //Get Directional Movement
+        float x = Input.GetAxisRaw("Horizontal");
+        float z = Input.GetAxisRaw("Vertical");
+
+        movementVector = new Vector3(x, 0, z);
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if(PCItemInventoryHandler.HealthPotionCount > 0)
+            {
+                //Get Health Potion Use
+                if (CurrentState != rollState && CurrentState != attackState)
+                {
+                    //Instantiate Health Zone
+                    GameObject healthZone = Instantiate(ItemManager.Instance.HealthZone) as GameObject;
+                    healthZone.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
+
+                    //Remove Health Potion
+                    PCItemInventoryHandler.Instance.UsedHealthPotion();
+                }
+            }
+        }
+
+        
+        
+
         //Get Pickup Input
-        if(player.GetButtonDown("Interact"))
+        if (player.GetButtonDown("Interact"))
         {
             if(PCItemInventoryHandler.PickUpFinished)
             {
@@ -429,12 +459,9 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         else
         {
             isBlocking = false;
-        }      
+        }
+        
 
-        //Get Directional Movement
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        movementVector = new Vector3(x, 0, z);
+        
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PCItemInventoryHandler : BaseMonoBehaviour
+public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
 {
     public static ItemPickup foundItem;
     public static bool PickUpFinished = true;
@@ -36,6 +36,16 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
     }
     private bool justPickedUpShield;
     public static ItemData CurrentShield;
+
+    //Consumables
+    private static int healthPotionCount;
+    public static int HealthPotionCount
+    {
+        get
+        {
+            return healthPotionCount;
+        }
+    }
 
     [Header("Weapons")]
     [SerializeField]
@@ -117,10 +127,19 @@ public class PCItemInventoryHandler : BaseMonoBehaviour
             case ItemData.ItemType.Shield:
                 StartCoroutine(PickUpShield());
                 break;
-
-            case ItemData.ItemType.Consumable:
-                break;
         }
+    }
+
+    public void PickUpHealthPotion()
+    {
+        healthPotionCount++;
+        EventManager.TriggerEvent(Events.PickUpHealthPotion);
+    }
+
+    public void UsedHealthPotion()
+    {
+        healthPotionCount--;
+        EventManager.TriggerEvent(Events.PickUpHealthPotion);
     }
 
     public void ToggleWeapon()

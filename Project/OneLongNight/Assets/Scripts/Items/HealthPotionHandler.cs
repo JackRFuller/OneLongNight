@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthPotionHandler : MonoBehaviour {
+public class HealthPotionHandler : BaseMonoBehaviour
+{
+    
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag.Equals("Player"))
+        {
+            PCItemInventoryHandler.Instance.PickUpHealthPotion();
+            this.gameObject.SetActive(false);
+        }
+    }
+
 }

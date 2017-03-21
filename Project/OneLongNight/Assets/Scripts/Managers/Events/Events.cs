@@ -9,6 +9,7 @@ public class Events
     //Item Pickup
     public static string HitItemPickup = "HitItemPickup"; // Triggers when player runs into an item pickup
     public static string ExitItemPickup = "ExitPickup"; //Triggers if Player Exits Weapon Pickup   
+    public static string PickUpHealthPotion = "HealthPotionPickup"; //Triggered when the player picks up a health potion
 
     //Shield Pickup
     public static string NewShieldPickup = "NewShieldPickup;"; //Triggered when player picks up a new Shield
@@ -25,6 +26,8 @@ public class Events
 
     //UI
     public static string HitByEnemy = "HitByEnemy"; //Triggered when the player is hit by an enemy's wapon
+    public static string RegeneratingHealth = "RegenHealth"; //Triggered when the player is in a health zone
+
     
 
 }

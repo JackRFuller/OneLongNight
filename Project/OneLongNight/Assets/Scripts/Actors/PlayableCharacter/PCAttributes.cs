@@ -84,4 +84,16 @@ public class PCAttributes : MonoSingleton<PCAttributes>
             isRegeneratingStamina = false;
         }
     }
+
+
+    //Triggered when the player is inside a healing zone
+    public void HeathRegenerate(float _amount)
+    {
+        health += _amount * Time.deltaTime;
+        EventManager.TriggerEvent(Events.RegeneratingHealth);
+        if(health > 100)
+        {
+            health = 100.0f;
+        }
+    }
 }

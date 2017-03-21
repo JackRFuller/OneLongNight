@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerUICanvasHandler : BaseMonoBehaviour
 {
+    [Header("Consumable UI Elements")]
+    [SerializeField]
+    private Text numOfHealthPotions;
+
     [Header("Shield UI Elements")]
     [SerializeField]
     private Image shieldImage;
@@ -48,18 +52,26 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
         //PC Attribute Bars
         EventManager.StartListening(Events.HitByEnemy, UpdateHealthBar);
         EventManager.StartListening(Events.PlayerDied, SetupDeathMessage);
+        EventManager.StartListening(Events.RegeneratingHealth, RegenerateHealth);
 
         EventManager.StartListening(Events.NewShieldPickup, ChangedShield);
         EventManager.StartListening(Events.NewWeaponPickup, ChangeWeaponImage);
+
+        //Consumables
+        EventManager.StartListening(Events.PickUpHealthPotion, HealthPotionPickedUp);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(Events.HitByEnemy, UpdateHealthBar);
         EventManager.StopListening(Events.PlayerDied, SetupDeathMessage);
+        EventManager.StopListening(Events.RegeneratingHealth, RegenerateHealth);
 
         EventManager.StopListening(Events.NewShieldPickup, ChangedShield);
         EventManager.StopListening(Events.NewWeaponPickup, ChangeWeaponImage);
+
+        //Consumables
+        EventManager.StopListening(Events.PickUpHealthPotion, HealthPotionPickedUp);
     }
 
     private void ChangedShield()
@@ -89,10 +101,23 @@ public class PlayerUICanvasHandler : BaseMonoBehaviour
             LerpDeathMessage();
     }
 
+    private void HealthPotionPickedUp()
+    {
+        numOfHealthPotions.text = "x" + PCItemInventoryHandler.HealthPotionCount.ToString();
+    }
+
     private void UpdateStaminaBar()
     {
         float fillPercent = PCAttributes.Instance.PCStamina * 0.01f;      
         staminaBarImage.fillAmount = fillPercent;
+    }
+
+    private void RegenerateHealth()
+    {
+        float health = PCAttributes.Health;
+        //Change Fill Amount
+        float fillAmount = health / 100.0f;
+        healthBarFillImage.fillAmount = fillAmount;
     }
 
     private void UpdateHealthBar()

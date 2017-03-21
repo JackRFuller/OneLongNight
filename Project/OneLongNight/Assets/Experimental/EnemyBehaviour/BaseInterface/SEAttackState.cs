@@ -19,7 +19,7 @@ public class SEAttackState : IEnemyState
     {
         //Stop Movement
         enemy.NavAgent.Stop();  
-        enemy.NavAgent.speed = 0;
+        enemy.NavAgent.velocity = Vector3.zero;
         
 
         attackCooldownTimer = enemy.AttackCooldownTime;
