@@ -15,6 +15,10 @@ public class PCRollState : IPlayableCharacterState
 
     public void OnEnterState()
     {
+        //Set Rotation
+        player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+
+        player.PCAnimator.SetBool("isRolling", true);
         PCAttributes.Instance.RemoveStamina(player.RollAction.ActionCost);
         timer = timerStartTime;
     }
@@ -30,35 +34,11 @@ public class PCRollState : IPlayableCharacterState
             //Check if we have movement
             if (player.MovementVector != Vector3.zero)
             {
-                player.PCAnimator.SetInteger("Movement", 1);
-
-                //Check if we're blocking 
-                if (player.IsBlocking)
-                {
-                    player.PCAnimator.SetBool("isBlocking", true);
-                    OnExitState(player.blockMoveState);
-                }
-                else
-                {
-                    player.PCAnimator.SetBool("isBlocking", false);
-                    OnExitState(player.moveState);
-                }
+                 OnExitState(player.moveState);
             }
             else
             {
-                player.PCAnimator.SetInteger("Movement", 0);
-
-                //Check if We're Blocking
-                if (player.IsBlocking)
-                {
-                    player.PCAnimator.SetBool("isBlocking", true);
-                    OnExitState(player.blockIdleState);
-                }
-                else
-                {
-                    player.PCAnimator.SetBool("isBlocking", false);
-                    OnExitState(player.idleState);
-                }
+                OnExitState(player.idleState);
             }
         }
     }

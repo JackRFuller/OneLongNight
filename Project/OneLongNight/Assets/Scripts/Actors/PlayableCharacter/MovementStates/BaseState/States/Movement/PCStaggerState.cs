@@ -15,10 +15,13 @@ public class PCStaggerState : IPlayableCharacterState
     public void OnEnterState()
     {
         //Turn Off Other Anim States
-        player.PCAnimator.SetBool("isRolling", false);
-        player.PCAnimator.SetBool("isAttacking", false);
-        player.PCAnimator.SetBool("isBlocking", false);
-        player.PCAnimator.SetBool("isPickingUp", false);
+        for(int i = 0; i < player.PCAnimator.parameterCount;i++)
+        {
+            if(player.PCAnimator.parameters[i].type == AnimatorControllerParameterType.Bool)
+            {
+                player.PCAnimator.SetBool(player.PCAnimator.parameters[i].name, false);
+            }
+        }       
 
         //Rotate To Look At Attacker
         Vector3 lookAtPos = new Vector3(StatePatternPlayableCharacter.attackingEnemy.position.x,
@@ -88,35 +91,11 @@ public class PCStaggerState : IPlayableCharacterState
                 //Check we're not standing still
                 if (player.MovementVector != Vector3.zero)
                 {
-                    player.PCAnimator.SetInteger("Movement", 1);
-
-                    //Check if We're Blocking
-                    if (player.IsBlocking)
-                    {
-                        player.PCAnimator.SetBool("isBlocking", true);
-                        OnExitState(player.blockMoveState);
-                    }
-                    else
-                    {
-                        player.PCAnimator.SetBool("isBlocking", false);
-                        OnExitState(player.moveState);
-                    }
+                    OnExitState(player.moveState);
                 }
                 else
                 {
-                    player.PCAnimator.SetInteger("Movement", 0);
-
-                    //Check if We're Blocking
-                    if (player.IsBlocking)
-                    {
-                        player.PCAnimator.SetBool("isBlocking", true);
-                        OnExitState(player.blockIdleState);
-                    }
-                    else
-                    {
-                        player.PCAnimator.SetBool("isBlocking", false);
-                        OnExitState(player.idleState);
-                    }
+                    OnExitState(player.idleState);
                 }
             }
            

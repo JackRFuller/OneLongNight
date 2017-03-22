@@ -7,7 +7,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 {
     [Header("Components")]
     [SerializeField]
-    private Transform enemyMeshTransform;
+    private Transform enemyMeshTransform;    
     [SerializeField]
     private EnemyUIHandler enemyUI;
     [SerializeField]
@@ -168,6 +168,8 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
     public void SetUpEnemy()
     {
+
+
         currentMat = characterMesh.material;
 
         currentMat.mainTexture = materialTexs[(Random.Range(0, materialTexs.Length))];
@@ -188,6 +190,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
         health = maxHealth;
 
         navAgent = this.GetComponent<NavMeshAgent>();
+        navAgent.avoidancePriority = Random.Range(0, 100);
 
         enemyWeapon.weaponDamage = attackDamage;
 

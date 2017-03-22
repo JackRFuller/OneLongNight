@@ -107,35 +107,11 @@ public class PCAttackState : IPlayableCharacterState
         //Check if We're Getting Movement
         if(player.MovementVector != Vector3.zero)
         {
-            player.PCAnimator.SetInteger("Movement", 1);
-
-            //Check if We're Blocking
-            if (player.IsBlocking)
-            {
-                player.PCAnimator.SetBool("isBlocking", true);
-                OnExitState(player.blockMoveState);
-            }
-            else
-            {
-                player.PCAnimator.SetBool("isBlocking", false);
-                OnExitState(player.moveState);
-            }
+            OnExitState(player.moveState);
         }
         else
         {
-            player.PCAnimator.SetInteger("Movement", 0);
-
-            //Check if We're Blocking
-            if (player.IsBlocking)
-            {
-                player.PCAnimator.SetBool("isBlocking", true);
-                OnExitState(player.blockIdleState);
-            }
-            else
-            {
-                player.PCAnimator.SetBool("isBlocking", false);
-                OnExitState(player.idleState);
-            }
+           OnExitState(player.idleState);
         }
     }
 

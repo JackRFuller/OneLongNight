@@ -12,7 +12,8 @@ public class PCIdleState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-        
+        player.PCAnimator.SetBool("IsMoving", false);
+        player.PCAnimator.SetBool("isBlocking", player.IsBlocking);
     }
 
     public void OnUpdateState()
@@ -25,50 +26,22 @@ public class PCIdleState : IPlayableCharacterState
                 //Check if We Have Enough Stamina to Attack
                 OnExitState(player.attackState);
             }
-        }
-
-        //Check For Roll
-        if(player.IsRolling)
-        {
-            //Check We Have Enough Stamina
-            if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(player.RollAction.ActionCost))
-            {
-                player.PCAnimator.SetBool("isRolling", true);
-                OnExitState(player.rollState);
-            }
-        }
+        }        
 
         //Check if Player is Picking Up An Item
         if(player.IsPickingUp)
         {
-            player.PCAnimator.SetBool("isPickingUp", true);
             OnExitState(player.pickUpState);
         }
 
         //Check for Movement
         if (player.MovementVector != Vector3.zero)
         {
-            //player.PCAnimator.SetInteger("Movement", 1);
-
-            if(player.IsBlocking)
-            {
-                player.PCAnimator.SetBool("isBlocking", true);
-                OnExitState(player.blockMoveState);
-            }
-            else
-            {
-                player.PCAnimator.SetBool("isBlocking", false);
-                OnExitState(player.moveState);
-            }
-            
+            OnExitState(player.moveState);
         }
         else
         {
-            if(player.IsBlocking)
-            {
-                player.PCAnimator.SetBool("isBlocking", true);
-                OnExitState(player.blockIdleState);
-            }
+            player.PCAnimator.SetBool("isBlocking", player.IsBlocking);
         }
     }
 

@@ -15,8 +15,18 @@ public class PCPickupState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-        timer = timerStartTime;
+        //Turn Off Other Anim States
+        for (int i = 0; i < player.PCAnimator.parameterCount; i++)
+        {
+            if (player.PCAnimator.parameters[i].type == AnimatorControllerParameterType.Bool)
+            {
+                player.PCAnimator.SetBool(player.PCAnimator.parameters[i].name, false);
+            }
+        }
 
+        player.PCAnimator.SetBool("isPickingUp",true);
+
+        timer = timerStartTime;
         Vector3 lookPos = PCItemInventoryHandler.foundItem.transform.position - player.transform.position;
         lookPos.y = 0;
         Quaternion rotation = Quaternion.LookRotation(lookPos);
@@ -35,34 +45,11 @@ public class PCPickupState : IPlayableCharacterState
             //Check for Movement
             if (player.MovementVector != Vector3.zero)
             {
-                player.PCAnimator.SetInteger("Movement", 1);
-
-                if (player.IsBlocking)
-                {
-                    player.PCAnimator.SetBool("isBlocking", true);
-                    OnExitState(player.blockMoveState);
-                }
-                else
-                {
-                    player.PCAnimator.SetBool("isBlocking", false);
-                    OnExitState(player.moveState);
-                }
-
+                OnExitState(player.moveState);               
             }
             else
             {
-                player.PCAnimator.SetInteger("Movement", 0);
-
-                if (player.IsBlocking)
-                {
-                    player.PCAnimator.SetBool("isBlocking", true);
-                    OnExitState(player.blockIdleState);
-                }
-                else
-                {
-                    player.PCAnimator.SetBool("isBlocking", false);
-                    OnExitState(player.idleState);
-                }
+                OnExitState(player.idleState);
             }
         }
     }

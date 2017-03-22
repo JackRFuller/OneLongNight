@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/CombatPrototype.unity
+- path: Assets/Scene/PromoArt.unity
   isLoaded: 1
   isActive: 1
