@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PCAttributes : MonoSingleton<PCAttributes>
 {
+    
+
     private const float startingHealth = 100.0f;
     private static float health;
     public static float Health
@@ -55,6 +57,8 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         StartCoroutine(cooldownRoutine);
     }
 
+
+
     public bool CheckIfPCHasEnoughStamina(float cost)
     {
         if (pcStamina >= cost)
@@ -95,5 +99,18 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         {
             health = 100.0f;
         }
+    }
+
+    /// <summary>
+    /// Used to make the PC invulnerable during rolling
+    /// </summary>
+    public void TurnOnCollider()
+    {
+        this.gameObject.layer = LayerMask.NameToLayer("Player");
+    }
+
+    public void TurnOffCollider()
+    {
+        this.gameObject.layer = LayerMask.NameToLayer("Invulnerable");
     }
 }

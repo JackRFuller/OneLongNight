@@ -194,6 +194,9 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
         enemyWeapon.weaponDamage = attackDamage;
 
+        //Set Enemy Weapon Layer
+        enemyWeapon.gameObject.layer = LayerMask.NameToLayer("Weapon");
+
         //Get PC
         target = PCAttributes.Instance.transform;
 

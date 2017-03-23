@@ -9,14 +9,25 @@ public class EnemyUIHandler : BaseMonoBehaviour
     [SerializeField]
     private GameObject healthObjs;
     [SerializeField]
-    private Image healthBar;
+    private Image healthBarImage;
+    [SerializeField]
+    private Image healthBarDamageTakenImage;
+
+    //Health Bar Lerping Properties
+    private float startingFillAmount;
+    private float targetFillAmount;
+    private float timeStarted;
+    private float healthBarLerpTime;
+    private bool isLerpingHealthBar;
+    private float healthBarLerpSpeed = 1.0f;
 
     private float maxHealth;
     
 
     public void SetHealthAttributes(float _maxHealth)
     {
-        healthBar.fillAmount = 1.0f;
+        healthBarImage.fillAmount = 1.0f;
+        healthBarDamageTakenImage.fillAmount = 1.0f;
         healthObjs.SetActive(false);
         maxHealth = _maxHealth;
     }
@@ -27,8 +38,14 @@ public class EnemyUIHandler : BaseMonoBehaviour
             healthObjs.SetActive(true);
 
         float fillAmount = newHealth / maxHealth;
-        
-        healthBar.fillAmount = fillAmount;
+        startingFillAmount = healthBarImage.fillAmount;
+        targetFillAmount = fillAmount;
+
+        healthBarImage.fillAmount = fillAmount;
+
+        timeStarted = Time.time;
+        isLerpingHealthBar = true;
+
 
         if(fillAmount <= 0)
         {
@@ -37,5 +54,25 @@ public class EnemyUIHandler : BaseMonoBehaviour
 
     }
 
-    
+    public override void UpdateNormal()
+    {
+        if (isLerpingHealthBar)
+            LerpDamageBar();
+    }
+
+    private void LerpDamageBar()
+    {
+        float timeSinceStarted = Time.time - timeStarted;
+        float percentageComplete = timeSinceStarted / healthBarLerpSpeed;
+
+        float fillAmount = Mathf.Lerp(startingFillAmount, targetFillAmount, percentageComplete);
+        healthBarDamageTakenImage.fillAmount = fillAmount;
+
+        if(percentageComplete >= 1.0f)
+        {
+            isLerpingHealthBar = false;
+        }
+    }
+
+
 }

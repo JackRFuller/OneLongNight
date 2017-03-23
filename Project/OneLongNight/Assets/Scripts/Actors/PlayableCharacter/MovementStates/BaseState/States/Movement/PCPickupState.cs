@@ -10,11 +10,13 @@ public class PCPickupState : IPlayableCharacterState
         player = pcStateController;
     }
 
-    private const float timerStartTime = 0.6f;
+    private const float timerStartTime = 0.75f;
     private float timer;
 
     public void OnEnterState()
     {
+        
+
         //Turn Off Other Anim States
         for (int i = 0; i < player.PCAnimator.parameterCount; i++)
         {
@@ -24,7 +26,7 @@ public class PCPickupState : IPlayableCharacterState
             }
         }
 
-        player.PCAnimator.SetBool("isPickingUp",true);
+        player.PCAnimator.SetBool("isPickingUp", true);
 
         timer = timerStartTime;
         Vector3 lookPos = PCItemInventoryHandler.foundItem.transform.position - player.transform.position;
