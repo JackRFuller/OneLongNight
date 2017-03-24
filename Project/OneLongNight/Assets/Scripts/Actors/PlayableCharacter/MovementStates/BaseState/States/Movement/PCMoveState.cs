@@ -24,6 +24,7 @@ public class PCMoveState : IPlayableCharacterState
 
     public void OnUpdateState()
     {
+        
         if (player.IsAttacking)
         {
             //Check We Have Enough Stamina
@@ -47,13 +48,28 @@ public class PCMoveState : IPlayableCharacterState
             //Check we're not standing still
             if (player.MovementVector != Vector3.zero)
             {
-                frameWait++;
-                if(frameWait == 3)
+                Vector3 lookPos = Vector3.zero;
+
+                //Get Camera Input
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if(Physics.Raycast(ray, out hit, 100.0f))
                 {
-                    player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
-                    frameWait = 0;
+                    lookPos = hit.point;
                 }
-                
+
+                Vector3 lookDir = lookPos - player.transform.position;
+                lookDir.y = 0;
+
+                player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+
+                //frameWait++;
+                //if(frameWait == 3)
+                //{
+                //    //player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+                //    frameWait = 0;
+                //}
+
             }
             else
             {

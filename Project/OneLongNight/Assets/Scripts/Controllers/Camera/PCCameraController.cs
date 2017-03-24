@@ -43,7 +43,7 @@ public class PCCameraController : BaseMonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Confined;
 
         focusArea = new FocusArea(target.bounds, focusAreaSize);
 
