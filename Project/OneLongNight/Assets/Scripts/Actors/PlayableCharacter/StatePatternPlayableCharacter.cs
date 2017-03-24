@@ -24,6 +24,16 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
+    //Scripts
+    private PCLookAt lookAt;
+    public PCLookAt LookAt
+    {
+        get
+        {
+            return lookAt;
+        }
+    }
+
     //States
     private IPlayableCharacterState currentState;
     public IPlayableCharacterState CurrentState
@@ -40,6 +50,29 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     private IPlayableCharacterState lastState;
 
     public PCIdleState idleState;
+    public PCMoveState moveState;
+
+    //Movement
+    private Vector3 targetMovePosition;
+    public Vector3 TargetMovePosition
+    {
+        get
+        {
+            return targetMovePosition;
+        }
+    }
+    private bool hasTargetMovePosition;
+    public bool HasTargetMovePosition
+    {
+        get
+        {
+            return hasTargetMovePosition;
+        }
+        set
+        {
+            hasTargetMovePosition = value;
+        }
+    }
 
     private void Start()
     {
@@ -47,8 +80,12 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         navAgent = this.GetComponent<NavMeshAgent>();
         anim = this.GetComponent<Animator>();
 
+        //Get Scripts
+        lookAt = this.GetComponent<PCLookAt>();
+
         //Set Up New States
         idleState = new PCIdleState(this);
+        moveState = new PCMoveState(this);
 
 
         //Set Starting State
@@ -57,7 +94,14 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     public override void UpdateNormal()
     {
-        if(currentState != lastState)
+        UpdateStates();
+
+        GetInput();
+    }
+
+    private void UpdateStates()
+    {
+        if (currentState != lastState)
         {
             currentState.OnEnterState();
             lastState = currentState;
@@ -66,6 +110,34 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         {
             currentState.OnUpdateState();
         }
+    }
+
+    private void GetInput()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            if(Input.GetMouseButton(0))
+            {
+                if(hit.collider.tag.Equals("Ground"))
+                {
+                    targetMovePosition = new Vector3(hit.point.x,
+                                                     transform.position.y,
+                                                     hit.point.z);
+                    hasTargetMovePosition = true;
+                }
+            }
+        }
+        
+    }
+
+    private void OnAnimatorMove()
+    {
+        transform.position = navAgent.nextPosition;
+
     }
 
 
