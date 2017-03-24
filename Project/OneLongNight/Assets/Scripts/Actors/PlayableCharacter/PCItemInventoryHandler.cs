@@ -167,157 +167,21 @@ public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
     //If Item is a Weapon
     IEnumerator PickUpWeapon()
     {
-        //Check if we already have a weapon
-        if(hasWeapon)
-        {
-            //Check if it's two handed
-            if (item.weaponType == ItemData.WeaponType.TwoHanded)
-            {
-                if(player.HasShield)
-                {
-                    //If it is then drop the shield
-                    //Turn off Current Shield
-                    shields[currentShieldIndex].SetActive(false);
-
-                    //Drop Current Shield
-                    GameObject droppedShield = ItemManager.Instance.GetShield(currentShieldIndex);
-
-                    droppedShield.transform.position = new Vector3(this.transform.position.x - 1.75f,
-                                                                   1.0f,
-                                                                   this.transform.position.z - 1.75f);
-                    droppedShield.SetActive(true);
-
-                    //Set Old Shield Durability
-                    ItemPickup droppedItem = droppedShield.GetComponent<ItemPickup>();
-                    droppedItem.ItemDurability = shieldDurability;
-                    droppedItem.ReactivateItem();
-
-                    player.HasShield = false;
-                }
-            }
-
-            //Check if weapon is dagger
-            if(weapons[5].activeInHierarchy)
-            {
-                weapons[5].SetActive(false);
-                daggerPlaceholder.SetActive(true);
-            }
-            else
-            {
-                //Drop Current Weapon
-                weapons[currentWeaponIndex].SetActive(false);
-
-                GameObject droppedWeapon = ItemManager.Instance.GetWeapon(currentWeaponIndex);
-
-                droppedWeapon.transform.position = new Vector3(this.transform.position.x,
-                                                               1.0f,
-                                                               this.transform.position.z);
-
-                droppedWeapon.SetActive(true);
-
-                //Set Old Weapon Durability
-                ItemPickup droppedItem = droppedWeapon.GetComponent<ItemPickup>();
-                droppedItem.ItemDurability = weaponDurability;
-                droppedItem.ReactivateItem();
-                
-            }
-        }
-
+        
         //Used to line up Pickup with Animation
         yield return new WaitForSeconds(0.5f);
 
-        //Set New Weapon Model
-        currentWeaponIndex = item.weaponIndex;
-        weapons[currentWeaponIndex].SetActive(true);
-
-        //Set New Weapon's Durability
-        weaponDurability = foundItem.ItemDurability;
-
-        //Set Weapon Damage Out
-        weaponHandlers[currentWeaponIndex].UpdateWeaponDamage(item.weaponAttackDamage);
-
-        //Set New Weapon Icon
-        EventManager.TriggerEvent(Events.NewWeaponPickup);
-
-        currentWeaponType = item.weaponType;
-        CurrentWeapon = item;
-        currentWeaponHandler = weaponHandlers[currentWeaponIndex];
-
-        hasWeapon = true;
         
-        //Turn off Pickup
-        foundItem.GetItem();
-
-        //Update Animation
-        OverrideAnimationClips();
+       
     }
 
     IEnumerator PickUpShield()
     {
-        //Check if we already have a shield
-        if(player.HasShield)
-        {
-            //Turn off Current Shield
-            shields[currentShieldIndex].SetActive(false);
-
-            //Drop Current Shield
-            GameObject droppedShield = ItemManager.Instance.GetShield(currentShieldIndex);
-
-            droppedShield.transform.position = new Vector3(this.transform.position.x,
-                                                           1.0f,
-                                                           this.transform.position.z);
-            droppedShield.SetActive(true);
-            
-            //Set Old Shield Durability
-            ItemPickup droppedItem = droppedShield.GetComponent<ItemPickup>();
-            droppedItem.ItemDurability = shieldDurability;
-            droppedItem.ReactivateItem();
-        }
-        else
-        {
-            //Check if we have two handed weapon
-            if(currentWeaponType == ItemData.WeaponType.TwoHanded)
-            {
-                //Drop two handed weapon                
-                weapons[currentWeaponIndex].SetActive(false);
-
-                GameObject droppedWeapon = ItemManager.Instance.GetWeapon(currentWeaponIndex);
-
-                droppedWeapon.transform.position = new Vector3(this.transform.position.x,
-                                                               1.0f,
-                                                               this.transform.position.z);
-
-                droppedWeapon.SetActive(true);
-
-                //Set Old Weapon Durability
-                ItemPickup droppedItem = droppedWeapon.GetComponent<ItemPickup>();
-                droppedItem.ItemDurability = weaponDurability;
-                droppedItem.ReactivateItem();
-
-                //Activate Dagger
-                SetoToDagger();
-            }
-        }
+        
         //Used to line up Pickup with Animation
         yield return new WaitForSeconds(0.5f);
 
-        currentShieldIndex = item.shieldIndex;
-        shields[currentShieldIndex].SetActive(true);
-        player.HasShield = true;
-
-        //Set Shield Durability
-        if(foundItem)
-            shieldDurability = foundItem.ItemDurability;
-
-        //Trigger UI Change
-        EventManager.TriggerEvent(Events.NewShieldPickup);
         
-        foundItem.GetItem();
-
-        justPickedUpShield = true;
-        CurrentShield = item;
-
-        OverrideAnimationClips();       
     }
 
     //Takes New Weapon and Sets Up New Animations

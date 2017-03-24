@@ -12,7 +12,7 @@ public class PCDeathState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-        player.PCAnimator.SetTrigger("isDead");
+
     }
 
     public void OnUpdateState()

@@ -42,8 +42,8 @@ public class PCCameraController : BaseMonoBehaviour
 
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
 
         focusArea = new FocusArea(target.bounds, focusAreaSize);
 
@@ -73,62 +73,62 @@ public class PCCameraController : BaseMonoBehaviour
 
     private void CameraFollow()
     {
-        focusArea.Update(target.bounds);
+        //focusArea.Update(target.bounds);
 
-        float newX = focusArea.center.x - cameraOffset.x;
-        float newY = focusArea.center.y - cameraOffset.y;
-        float newZ = focusArea.center.z - cameraOffset.z;
+        //float newX = focusArea.center.x - cameraOffset.x;
+        //float newY = focusArea.center.y - cameraOffset.y;
+        //float newZ = focusArea.center.z - cameraOffset.z;
 
-        Vector3 focusPosition = new Vector3(newX, newY, newZ);
+        //Vector3 focusPosition = new Vector3(newX, newY, newZ);
 
-        if (focusArea.velocity.x != 0)
-        {
-            lookAheadDirX = Mathf.Sign(focusArea.velocity.x);
+        //if (focusArea.velocity.x != 0)
+        //{
+        //    lookAheadDirX = Mathf.Sign(focusArea.velocity.x);
 
-            if (Mathf.Sign(player.MovementVector.x) == Mathf.Sign(focusArea.velocity.x) && player.MovementVector.x != 0)
-            {
-                lookAheadStoppedX = false;
-                targetLookAheadX = lookAheadDirX * lookAheadDst;
-            }
-            else
-            {
-                if (!lookAheadStoppedX)
-                {
-                    targetLookAheadX = currenLookAheadX + (lookAheadDirX * lookAheadDst - currenLookAheadX) / 4f;
-                    lookAheadStoppedX = true;
-                }
+        //    if (Mathf.Sign(player.MovementVector.x) == Mathf.Sign(focusArea.velocity.x) && player.MovementVector.x != 0)
+        //    {
+        //        lookAheadStoppedX = false;
+        //        targetLookAheadX = lookAheadDirX * lookAheadDst;
+        //    }
+        //    else
+        //    {
+        //        if (!lookAheadStoppedX)
+        //        {
+        //            targetLookAheadX = currenLookAheadX + (lookAheadDirX * lookAheadDst - currenLookAheadX) / 4f;
+        //            lookAheadStoppedX = true;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
-        if (focusArea.velocity.z != 0)
-        {
-            lookAheadDirZ = Mathf.Sign(focusArea.velocity.z);
+        //if (focusArea.velocity.z != 0)
+        //{
+        //    lookAheadDirZ = Mathf.Sign(focusArea.velocity.z);
 
-            if (Mathf.Sign(player.MovementVector.z) == Mathf.Sign(focusArea.velocity.z) && player.MovementVector.z != 0)
-            {
-                lookAheadStoppedZ = false;
-                targetLookAheadZ = lookAheadDirZ * lookAheadDst;
-            }
-            else
-            {
-                if (!lookAheadStoppedZ)
-                {
-                    targetLookAheadZ = currentLookAheadZ + (lookAheadDirZ * lookAheadDst - currentLookAheadZ) / 4f;
-                    lookAheadStoppedZ = true;
-                }
+        //    if (Mathf.Sign(player.MovementVector.z) == Mathf.Sign(focusArea.velocity.z) && player.MovementVector.z != 0)
+        //    {
+        //        lookAheadStoppedZ = false;
+        //        targetLookAheadZ = lookAheadDirZ * lookAheadDst;
+        //    }
+        //    else
+        //    {
+        //        if (!lookAheadStoppedZ)
+        //        {
+        //            targetLookAheadZ = currentLookAheadZ + (lookAheadDirZ * lookAheadDst - currentLookAheadZ) / 4f;
+        //            lookAheadStoppedZ = true;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
-        currenLookAheadX = Mathf.SmoothDamp(currenLookAheadX, targetLookAheadX, ref smoothLookVelocityX, lookSmoothTime);
-        currentLookAheadZ = Mathf.SmoothDamp(currentLookAheadZ, targetLookAheadZ, ref smoothLookVelocityZ, lookSmoothTime);
+        //currenLookAheadX = Mathf.SmoothDamp(currenLookAheadX, targetLookAheadX, ref smoothLookVelocityX, lookSmoothTime);
+        //currentLookAheadZ = Mathf.SmoothDamp(currentLookAheadZ, targetLookAheadZ, ref smoothLookVelocityZ, lookSmoothTime);
 
-        focusPosition += Vector3.forward * currentLookAheadZ;
-        focusPosition += Vector3.right * currenLookAheadX;
+        //focusPosition += Vector3.forward * currentLookAheadZ;
+        //focusPosition += Vector3.right * currenLookAheadX;
 
-        transform.position = focusPosition;
+        //transform.position = focusPosition;
     }                                                                        
 
     public void OnDrawGizmos()

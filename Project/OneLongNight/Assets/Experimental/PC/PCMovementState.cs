@@ -22,7 +22,7 @@ public class PCMovementState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-
+       
     }
 
     public void OnUpdateState()

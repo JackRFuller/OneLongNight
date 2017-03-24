@@ -10,101 +10,20 @@ public class PCStaggerState : IPlayableCharacterState
         player = pcStateController;
     }
 
-    private float staggerCooldownTimer;
+   
 
     public void OnEnterState()
     {
-        //Turn Off Other Anim States
-        for(int i = 0; i < player.PCAnimator.parameterCount;i++)
-        {
-            if(player.PCAnimator.parameters[i].type == AnimatorControllerParameterType.Bool)
-            {
-                player.PCAnimator.SetBool(player.PCAnimator.parameters[i].name, false);
-            }
-        }       
-
-        //Rotate To Look At Attacker
-        Vector3 lookAtPos = new Vector3(StatePatternPlayableCharacter.attackingEnemy.position.x,
-                                        player.transform.position.y,
-                                        StatePatternPlayableCharacter.attackingEnemy.position.z);
-                
-
-        player.transform.LookAt(lookAtPos);
-
-        Vector3 rotation = player.transform.eulerAngles;
-
-        rotation = new Vector3(rotation.x, rotation.y - 45, rotation.z);
-
-        player.transform.eulerAngles = rotation;
-
-        //Work Out Direction of Hit3
-        Vector3 relativehit = StatePatternPlayableCharacter.hitDirection;
-
-        //Determine Hit Direction            
-        relativehit = player.transform.InverseTransformPoint(relativehit);
-
-        int staggeredDirection = 0;
-
-        if (relativehit.x < 0)
-            staggeredDirection = 0;
-
-        if (relativehit.x >= 0)
-            staggeredDirection = 1;
-
-        //Set Stagger Direction
-        player.PCAnimator.SetFloat("StaggeredDirection", staggeredDirection);
-
-        //Enable Stagger State
-        player.PCAnimator.SetBool("isStaggered", true);
-
-        //Set StaggerCooldown
-        staggerCooldownTimer = player.StaggerCooldown;
+        
     }
 
     public void OnUpdateState()
     {
-        if(staggerCooldownTimer >= 0f)
-        {
-            staggerCooldownTimer -= Time.deltaTime;
-        }
-        else
-        {
-            //Check for Attack
-            if (player.IsAttacking)
-            {
-                //Check We Have Enough Stamina
-                if (PCAttributes.Instance.CheckIfPCHasEnoughStamina(PCItemInventoryHandler.CurrentWeapon.weaponAttackCosts[0]))
-                {
-                    //Check if We Have Enough Stamina to Attack
-                    OnExitState(player.attackState);
-                }
-            }
-
-            //Check if We're Picking Up Items
-            if (player.IsPickingUp)
-            {
-                player.PCAnimator.SetBool("isPickingUp", true);
-                OnExitState(player.pickUpState);
-            }
-            else
-            {
-                //Check we're not standing still
-                if (player.MovementVector != Vector3.zero)
-                {
-                    OnExitState(player.moveState);
-                }
-                else
-                {
-                    OnExitState(player.idleState);
-                }
-            }
-           
-        }
+       
     }
 
     public void OnExitState(IPlayableCharacterState newState)
     {
-        player.PCAnimator.SetBool("isStaggered", false);
-        player.CurrentState = newState;
+       
     }
 }
