@@ -232,7 +232,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 			currentState.OnEnterState();
 
 			lastState = currentState;
-            Debug.Log("New State " + currentState);
+            //Debug.Log("New State " + currentState);
 		}
 		else
 		{

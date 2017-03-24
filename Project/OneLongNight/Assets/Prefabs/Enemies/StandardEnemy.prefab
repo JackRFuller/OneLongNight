@@ -814,7 +814,7 @@ GameObject:
   - component: {fileID: 23901540893730316}
   - component: {fileID: 65453345429883864}
   - component: {fileID: 114537517731238476}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: SM_Wep_Staff_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2753,6 +2753,13 @@ MonoBehaviour:
   distanceToPCToAttack: 2
   attackDamage: 10
   attackCooldownTime: 0.5
+  chanceOfItemDrop: 100
+  chanceOfTwoItemDrops: 6
+  itemDrops:
+  - itemType: 0
+    chanceOfDrop: 75
+  - itemType: 0
+    chanceOfDrop: 20
 --- !u!114 &114880298883910128
 MonoBehaviour:
   m_ObjectHideFlags: 1

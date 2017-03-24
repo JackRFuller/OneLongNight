@@ -41,11 +41,7 @@ public class CameraSmoothFollow : MonoBehaviour
         Quaternion currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
 
         transform.position = target.position;
-        transform.position -= currentRotation * Vector3.forward * distance;
-
-        Vector3 newPos = new Vector3(transform.position.x,
-                                    currentHeight,
-                                    transform.position.z);
+        transform.position -= currentRotation * Vector3.forward * distance;        
 
         transform.LookAt(target);
     }

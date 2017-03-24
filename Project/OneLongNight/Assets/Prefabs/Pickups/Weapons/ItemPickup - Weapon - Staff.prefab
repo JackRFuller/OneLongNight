@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23022531751174180}
   - component: {fileID: 64737362860239080}
   - component: {fileID: 54184654039883478}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: StaffModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1801922116132220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.4819708, y: 0.942, z: -2.04}
+  m_LocalPosition: {x: 2.55, y: 1.504, z: 7.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4979672432797816}

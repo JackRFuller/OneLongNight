@@ -13,12 +13,8 @@ public class WeaponHandler : BaseMonoBehaviour
        
     private int attackIndex;
 
-    private Transform playerTransform;
-
     private void Start()
     {
-        playerTransform = PCAttributes.Instance.transform;
-
         weaponCollider = this.GetComponent<Collider>();
         weaponCollider.enabled = false;
     }

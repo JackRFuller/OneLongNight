@@ -109,4 +109,9 @@ public class ItemManager : MonoSingleton<ItemManager>
         Debug.LogError("No Shield Found!!!!");
         return new GameObject();
     }
+
+    public void SpawnInItem(Transform enemy, DroppedItem item)
+    {
+
+    }
 }

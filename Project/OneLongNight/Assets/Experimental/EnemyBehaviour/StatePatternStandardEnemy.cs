@@ -159,7 +159,16 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
             return staggeredDirection;
         }
     }
-    
+
+    [Header("Item Drops")]
+    [SerializeField]
+    [Range(0,100)]
+    private int chanceOfItemDrop;
+    [SerializeField]
+    [Range(0, 100)]
+    private int chanceOfTwoItemDrops;
+    [SerializeField]
+    private DroppedItem[] itemDrops;
 
     private void Start()
     {
@@ -234,6 +243,7 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
         if (health <= 0)
         {
+            CalculateItemDrops();
             CurrentState = deathState;
         }
         else
@@ -252,14 +262,57 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
             //Set Staggered State
             currentState = staggerState;
         }
-        
-        
     }
 
     private void BlockedByEnemy()
     {
         //Set Staggered State
         currentState = staggerState;
+    }
+
+    private void CalculateItemDrops()
+    {
+        //Check if we're dropping an item
+        int ranValue = Random.Range(0, 100);
+        if(ranValue <= chanceOfItemDrop)
+        {
+            //Determine how many items we are dropping
+            ranValue = Random.Range(0, 100);
+
+            int numberOfItemDrops = 1;
+
+            if(ranValue <= chanceOfTwoItemDrops)
+            {
+                numberOfItemDrops = 2;
+            }
+
+            int weightTotal = 0;
+
+            List<int> percentageWeightings = new List<int>();    
+
+            //Determine Items
+            for(int i = 0; i < itemDrops.Length; i++)
+            {
+                percentageWeightings.Add(itemDrops[i].chanceOfDrop);
+                weightTotal += itemDrops[i].chanceOfDrop;
+            }
+
+            int result = 0;
+            int total = 0;
+
+            int randValue = Random.Range(0, weightTotal);
+            for(result = 0; result < percentageWeightings.Count; result++)
+            {
+                total += percentageWeightings[result];
+                if(total > randValue)
+                {
+                    
+                    break;
+                }
+            }
+            Debug.Log(result);
+
+        }
     }
     
 
