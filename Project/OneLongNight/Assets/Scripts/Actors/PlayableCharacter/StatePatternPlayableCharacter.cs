@@ -51,6 +51,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     public PCIdleState idleState;
     public PCMoveState moveState;
+    public PCRollState rollState;
 
     //Movement
     private Vector3 targetMovePosition;
@@ -86,6 +87,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Set Up New States
         idleState = new PCIdleState(this);
         moveState = new PCMoveState(this);
+        rollState = new PCRollState(this);
 
 
         //Set Starting State
@@ -130,15 +132,20 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
                     hasTargetMovePosition = true;
                 }
             }
+            if(Input.GetMouseButton(1))
+            {
+                if (hit.collider.tag.Equals("Ground"))
+                {
+                    if(CurrentState != rollState)
+                    {
+                        targetMovePosition = new Vector3(hit.point.x,
+                                                     transform.position.y,
+                                                     hit.point.z);
+                        currentState = rollState;
+                    }
+                }
+            }
         }
         
     }
-
-    private void OnAnimatorMove()
-    {
-        transform.position = navAgent.nextPosition;
-
-    }
-
-
 }

@@ -15,7 +15,7 @@ public class PCRollState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-       
+        timer = timerStartTime;
     }
 
     public void OnUpdateState()
