@@ -169,7 +169,7 @@ BlendTree:
   m_Name: Staggered Direction Controller
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 8b43ac74bdb74114fa95524effa869d9, type: 2}
+    m_Motion: {fileID: 7400000, guid: 512ca6c79f3c5f848969e36d4654b99d, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -177,7 +177,7 @@ BlendTree:
     m_DirectBlendParameter: Attack1Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 7784cb094deceeb4086a7fa94e664c92, type: 2}
+    m_Motion: {fileID: 7400000, guid: 512ca6c79f3c5f848969e36d4654b99d, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1

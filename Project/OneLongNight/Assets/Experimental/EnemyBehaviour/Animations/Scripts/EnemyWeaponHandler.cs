@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class EnemyWeaponHandler : BaseMonoBehaviour
 {
+    private AudioSource audio;
     [HideInInspector] public Transform wielder;
     [HideInInspector] public float weaponDamage;
 
     private void Start()
     {
+        audio = this.GetComponent<AudioSource>();
         this.GetComponent<Collider>().enabled = false;
     }
 
@@ -18,6 +20,7 @@ public class EnemyWeaponHandler : BaseMonoBehaviour
         {
             Vector3 pointOfContact = Vector3.zero;
             RaycastHit hit;
+            audio.PlayOneShot(audio.clip);
 
             if (Physics.Raycast(transform.position, transform.forward, out hit))
             {

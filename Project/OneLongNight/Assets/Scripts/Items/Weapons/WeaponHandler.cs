@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class WeaponHandler : BaseMonoBehaviour
 {
+    private AudioSource audio;
+
     private Collider weaponCollider;
 
     private List<int> attackIndexes = new List<int>(); //Queues up List of Attack Indexes
@@ -17,6 +20,7 @@ public class WeaponHandler : BaseMonoBehaviour
 
     private void Start()
     {
+        audio = this.GetComponent<AudioSource>();
         player = this.transform.root;        
         weaponCollider = this.GetComponent<Collider>();
         weaponCollider.enabled = false;
@@ -93,6 +97,8 @@ public class WeaponHandler : BaseMonoBehaviour
 
             //Send Damage
             other.SendMessage("HitByPlayer", hitInfo, SendMessageOptions.DontRequireReceiver);
+
+            audio.PlayOneShot(audio.clip);
 
             //Update Durability
             EventManager.TriggerEvent(Events.UpdateWeaponDurability);
