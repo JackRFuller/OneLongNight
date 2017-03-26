@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
 {
+    [Header("Animations")]
+    [SerializeField]
+    private PCAttackAnimationController[] attackAnimationControllers = new PCAttackAnimationController[4];
+
     public static ItemPickup foundItem;
     public static bool PickUpFinished = true;
 
@@ -383,5 +387,10 @@ public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
         }
 
         return controller;
+    }
+
+    public void AddPCAttackController(PCAttackAnimationController controller, int index)
+    {
+        attackAnimationControllers[index] = controller;
     }
 }
