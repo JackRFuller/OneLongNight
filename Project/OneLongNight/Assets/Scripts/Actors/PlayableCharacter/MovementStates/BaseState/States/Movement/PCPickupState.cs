@@ -10,30 +10,18 @@ public class PCPickupState : IPlayableCharacterState
         player = pcStateController;
     }
 
-    private const float timerStartTime = 0.75f;
+    private const float timerStartTime = 0.25f;
     private float timer;
 
     public void OnEnterState()
     {
-        
-
-        //Turn Off Other Anim States
-        for (int i = 0; i < player.PCAnimator.parameterCount; i++)
-        {
-            if (player.PCAnimator.parameters[i].type == AnimatorControllerParameterType.Bool)
-            {
-                player.PCAnimator.SetBool(player.PCAnimator.parameters[i].name, false);
-            }
-        }
+        player.PCAnimator.applyRootMotion = true;
 
         player.PCAnimator.SetBool("isPickingUp", true);
 
         timer = timerStartTime;
-        Vector3 lookPos = PCItemInventoryHandler.foundItem.transform.position - player.transform.position;
-        lookPos.y = 0;
-        Quaternion rotation = Quaternion.LookRotation(lookPos);
-
-        player.transform.rotation = rotation;
+        PCItemInventoryHandler.Instance.PickUpItem();        
+       
     }
 
     public void OnUpdateState()
@@ -44,20 +32,15 @@ public class PCPickupState : IPlayableCharacterState
         }
         else
         {
-            //Check for Movement
-            if (player.MovementVector != Vector3.zero)
-            {
-                OnExitState(player.moveState);               
-            }
-            else
-            {
-                OnExitState(player.idleState);
-            }
+            OnExitState(player.idleState);
         }
+        
     }
 
     public void OnExitState(IPlayableCharacterState newState)
     {
+        player.HasTargetPosition = false;
+        player.HasPickupTarget = false;
         player.PCAnimator.SetBool("isPickingUp", false);
         player.CurrentState = newState;
     }

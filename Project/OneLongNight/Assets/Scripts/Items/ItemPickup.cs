@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ItemPickup : BaseMonoBehaviour
 {
-    [SerializeField]
-    private Transform itemModel;
+   
     private Vector3 itemModelStartPos;
 
     [SerializeField]
@@ -34,8 +33,6 @@ public class ItemPickup : BaseMonoBehaviour
 
     private void Start()
     {
-        itemModelStartPos = itemModel.transform.localPosition;
-        
         switch(item.itemType)
         {
             case ItemData.ItemType.Weapon:
@@ -50,9 +47,6 @@ public class ItemPickup : BaseMonoBehaviour
 
     public void GetItem()
     {
-        //Reset Item Model Position
-        itemModel.transform.localPosition = itemModelStartPos;
-
         EventManager.TriggerEvent(Events.ExitItemPickup);
         this.gameObject.SetActive(false);
         PCItemInventoryHandler.foundItem = null;
@@ -66,7 +60,7 @@ public class ItemPickup : BaseMonoBehaviour
 
     IEnumerator TurnOnCollider()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0f);
         this.GetComponent<Collider>().enabled = true;
     }
 

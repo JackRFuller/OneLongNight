@@ -1,11 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using Rewired;
 
 public class StatePatternPlayableCharacter : BaseMonoBehaviour
 {
     //Components
+    private NavMeshAgent navAgent;
+    public NavMeshAgent NavAgent
+    {
+        get
+        {
+            return navAgent;
+        }
+    }
     private Animator pcAnimator;
     public Animator PCAnimator
     {
@@ -132,8 +141,42 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     private Transform attacker;
 
     //Inputs =========================================================================
+    [SerializeField]
+    private Transform targetMarker;
     private Player player;
     //Movement
+    private Vector3 targetPosition;
+    public Vector3 TargetPosition
+    {
+        get
+        {
+            return targetPosition;
+        }
+    }
+    private bool hasPickupTarget; //Used to control whether the player is moving towards a pickup target
+    public bool HasPickupTarget
+    {
+        get
+        {
+            return hasPickupTarget;
+        }
+        set
+        {
+            hasPickupTarget = value;
+        }
+    }
+    private bool hasTargetPosition;
+    public bool HasTargetPosition
+    {
+        get
+        {
+            return hasTargetPosition;
+        }
+        set
+        {
+            hasTargetPosition = value;
+        }
+    }
     private int frameWait;
 
     private Vector3 movementVector;
@@ -197,9 +240,11 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     private void Start()
     {
-        player = ReInput.players.GetPlayer(0);
-
+        //Get Components
         pcAnimator = this.GetComponent<Animator>();
+        navAgent = this.GetComponent<NavMeshAgent>();
+
+        player = ReInput.players.GetPlayer(0);
 
         //Movement
         target.position = this.transform.position;
@@ -220,7 +265,8 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 
     public override void UpdateNormal()
     {
-        GetInputs();
+        //GetInputs();
+        GetMouseInput();
 
         UpdateCurrentState();
     }
@@ -232,7 +278,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 			currentState.OnEnterState();
 
 			lastState = currentState;
-            //Debug.Log("New State " + currentState);
+            Debug.Log("New State " + currentState);
 		}
 		else
 		{
@@ -362,6 +408,57 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     #endregion
 
 #region Inputs
+
+    private void GetMouseInput()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            //Get Left Click
+            if(Input.GetMouseButtonUp(0))
+            {
+                if (hit.collider.tag == "Ground" || hit.collider.tag == "Pickup")
+                {
+                    targetPosition = new Vector3(hit.point.x,
+                                                 this.transform.position.y,
+                                                 hit.point.z);
+
+                    targetMarker.position = targetPosition;
+
+                    hasTargetPosition = true;
+                    if(hit.collider.tag == "Pickup")
+                    {
+                        hasPickupTarget = true;
+                        PCItemInventoryHandler.foundItem = hit.collider.GetComponent<ItemPickup>();
+                    }
+                }
+            }
+
+            //Get Right Click
+            if(Input.GetMouseButton(1))
+            {
+                //Roll
+                if(hit.collider.tag == "Ground")
+                {
+                    //If We're Not Currently Rolling
+                    if(currentState != rollState)
+                    {
+                        //If We've got enough Stamina
+                        if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(rollAction.ActionCost))
+                        {
+                            targetPosition = new Vector3(hit.point.x,
+                                                 this.transform.position.y,
+                                                 hit.point.z);
+                            CurrentState = rollState;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private void GetInputs()
     {

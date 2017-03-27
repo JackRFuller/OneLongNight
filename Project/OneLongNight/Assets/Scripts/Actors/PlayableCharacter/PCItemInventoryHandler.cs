@@ -253,7 +253,7 @@ public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
         foundItem.GetItem();
 
         //Update Animation
-        OverrideAnimationClips();
+        OverrideAnimationClips();        
     }
 
     IEnumerator PickUpShield()
@@ -321,7 +321,8 @@ public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
         justPickedUpShield = true;
         CurrentShield = item;
 
-        OverrideAnimationClips();       
+        OverrideAnimationClips();
+        
     }
 
     //Takes New Weapon and Sets Up New Animations

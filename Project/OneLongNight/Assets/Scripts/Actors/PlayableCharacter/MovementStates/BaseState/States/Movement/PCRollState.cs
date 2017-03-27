@@ -15,9 +15,13 @@ public class PCRollState : IPlayableCharacterState
 
     public void OnEnterState()
     {
-        //Set Rotation
-        player.transform.rotation = Quaternion.LookRotation(player.MovementVector);
+        player.HasTargetPosition = false;
+        player.NavAgent.Stop();
 
+        //Look At Destination
+        player.transform.LookAt(player.TargetPosition);
+
+        player.PCAnimator.applyRootMotion = true;
         player.PCAnimator.SetBool("isRolling", true);
         PCAttributes.Instance.RemoveStamina(player.RollAction.ActionCost);
         timer = timerStartTime;
@@ -31,20 +35,14 @@ public class PCRollState : IPlayableCharacterState
         }
         else
         {
-            //Check if we have movement
-            if (player.MovementVector != Vector3.zero)
-            {
-                 OnExitState(player.moveState);
-            }
-            else
-            {
-                OnExitState(player.idleState);
-            }
+            OnExitState(player.idleState);
         }
     }
 
     public void OnExitState(IPlayableCharacterState newState)
     {
+        player.PCAnimator.applyRootMotion = false;
+        player.NavAgent.velocity = Vector3.zero;        
         player.PCAnimator.SetBool("isRolling", false);
         player.CurrentState = newState;
     }
