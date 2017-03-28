@@ -22,12 +22,13 @@ MonoBehaviour:
   - 35
   - 40
   weaponAttackCosts:
-  - 0
-  - 0
-  - 0
-  - 0
+  - 5
+  - 5
+  - 5
+  - 5
   weaponDurability: 100000
   criticalHitDamage: 0
+  weaponRange: 1.5
   shieldIndex: 0
   shieldDurability: 0
   movementAnimations: {fileID: 11400000, guid: 578c667a44ba472489a4d95346cfb80a, type: 2}

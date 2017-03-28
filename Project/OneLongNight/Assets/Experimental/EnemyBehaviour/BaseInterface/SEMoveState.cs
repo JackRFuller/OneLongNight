@@ -13,10 +13,12 @@ public class SEMoveState : IEnemyState
 
     public void OnEnterState()
     {
-       
+
+        enemy.NavAgent.velocity = Vector3.zero;
         enemy.NavAgent.Resume();
 
         //Set Nav Mesh Speed
+        
         enemy.NavAgent.destination = enemy.Target.position;
         enemy.NavAgent.speed = enemy.MovementSpeed;
 
@@ -31,13 +33,13 @@ public class SEMoveState : IEnemyState
 
         //Check Distance To PC
         float distToPC = Vector3.Distance(enemy.transform.position, enemy.Target.position);
-
+       
         //If Within Range Then Attack
         if (distToPC < enemy.DistanceToPCToAttack)
         {
             //Check if Enemy is Within Line of Sight
             if(enemy.CanAttack())
-            {
+            {               
                 //Move To Attack
                 OnExitState(enemy.attackState);
             }

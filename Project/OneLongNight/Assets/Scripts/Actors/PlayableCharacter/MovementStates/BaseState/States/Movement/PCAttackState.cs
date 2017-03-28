@@ -19,7 +19,7 @@ public class PCAttackState : IPlayableCharacterState
 
     private static bool CanTakeAttackInput;    
 
-    private static float animationTimer;   
+    private static float animationTimer = 1;   
 
     //Weapon Variables
     private ItemData currentWeapon;
@@ -28,8 +28,11 @@ public class PCAttackState : IPlayableCharacterState
 
     public void OnEnterState()
     {
+        animationTimer = 1;
         weaponDurability = PCItemInventoryHandler.WeaponDurability;
+        player.transform.LookAt(player.EnemyTarget);
 
+        player.PCAnimator.applyRootMotion = false;
         player.PCAnimator.SetBool("isAttacking", true);
         attackCount = 0;
         player.PCAnimator.SetInteger("AttackCount", attackCount);
@@ -43,18 +46,17 @@ public class PCAttackState : IPlayableCharacterState
         else
         {
             currentWeapon = PCItemInventoryHandler.CurrentWeapon;            
-        }
-        
+        }        
         weaponAttackCosts = currentWeapon.weaponAttackCosts;
 
     }
 
     public void OnUpdateState()
     {
-        if(CanTakeAttackInput)
+        if (CanTakeAttackInput)
             CheckForAttackInput();
 
-        if(animationTimer > 0)
+        if (animationTimer > 0)
         {
             animationTimer -= Time.deltaTime;
 
@@ -104,14 +106,13 @@ public class PCAttackState : IPlayableCharacterState
 
     private void DetectMovement()
     {
-        //Check if We're Getting Movement
-        if(player.MovementVector != Vector3.zero)
+        if (player.HasTargetPosition || player.HasPickupTarget)
         {
             OnExitState(player.moveState);
         }
         else
         {
-           OnExitState(player.idleState);
+            OnExitState(player.idleState);
         }
     }
 
@@ -165,12 +166,44 @@ public class PCAttackState : IPlayableCharacterState
 
     private void CheckForAttackInput()
     {
-        Player playerControls = ReInput.players.GetPlayer(0);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (playerControls.GetButtonDown("Attack") || Input.GetMouseButtonDown(0))                                                                               
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            hasQueuedNextAttack = true;            
+            if(Input.GetMouseButton(0))
+            {
+                if (hit.collider.tag == "Enemy")
+                {
+                    if (hit.transform == player.EnemyTarget)
+                    {
+                        hasQueuedNextAttack = true;
+                        player.transform.LookAt(player.EnemyTarget);
+                    }
+                    else
+                    {
+                        //CHeck if within range
+                        float dist = Vector3.Distance(player.transform.position, hit.transform.position);
+
+                        if(dist <= StatePatternPlayableCharacter.WeaponRange)
+                        {
+                            player.EnemyTarget = hit.transform;
+                            hasQueuedNextAttack = true;
+                            player.transform.LookAt(player.EnemyTarget);
+                            Debug.Log("Found New Target");
+                        }
+                    }
+                }
+            }
+            
         }
+        //Player playerControls = ReInput.players.GetPlayer(0);
+
+        //if (playerControls.GetButtonDown("Attack") || Input.GetMouseButtonDown(0))                                                                               
+        //{
+        //    hasQueuedNextAttack = true;            
+        //}
     }
 
     //Called from the script on the animation state
@@ -185,6 +218,7 @@ public class PCAttackState : IPlayableCharacterState
 
     public void OnExitState(IPlayableCharacterState newState)
     {
+        player.EnemyTarget = null;
         player.PCAnimator.SetBool("isAttacking", false);
         //Debug.Log("Moved to " + newState);
         player.CurrentState = newState;

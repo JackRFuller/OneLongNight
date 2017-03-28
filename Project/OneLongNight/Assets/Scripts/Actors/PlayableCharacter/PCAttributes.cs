@@ -20,7 +20,7 @@ public class PCAttributes : MonoSingleton<PCAttributes>
         }      
     }
 
-    private const float startingPCStamina = 100000.0f;
+    private const float startingPCStamina = 100.0f;
 
     private float pcStamina;
     public float PCStamina
@@ -70,7 +70,7 @@ public class PCAttributes : MonoSingleton<PCAttributes>
 
     IEnumerator CooldownToStartStaminaRegneration()
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(2.0f);
         isRegeneratingStamina = true;
     }
 
@@ -106,7 +106,7 @@ public class PCAttributes : MonoSingleton<PCAttributes>
     /// </summary>
     public void TurnOnCollider()
     {
-        this.gameObject.layer = LayerMask.NameToLayer("Player");
+        this.gameObject.layer = LayerMask.NameToLayer("Player");        
     }
 
     public void TurnOffCollider()

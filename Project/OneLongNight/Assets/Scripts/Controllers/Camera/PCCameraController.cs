@@ -79,7 +79,7 @@ public class PCCameraController : BaseMonoBehaviour
         {
             lookAheadDirX = Mathf.Sign(focusArea.velocity.x);
 
-            if (Mathf.Sign(player.MovementVector.x) == Mathf.Sign(focusArea.velocity.x) && player.MovementVector.x != 0)
+            if (Mathf.Sign(player.NavAgent.velocity.x) == Mathf.Sign(focusArea.velocity.x) && player.NavAgent.velocity.x != 0)
             {
                 lookAheadStoppedX = false;
                 targetLookAheadX = lookAheadDirX * lookAheadDst;
@@ -99,7 +99,7 @@ public class PCCameraController : BaseMonoBehaviour
         {
             lookAheadDirZ = Mathf.Sign(focusArea.velocity.z);
 
-            if (Mathf.Sign(player.MovementVector.z) == Mathf.Sign(focusArea.velocity.z) && player.MovementVector.z != 0)
+            if (Mathf.Sign(player.NavAgent.velocity.z) == Mathf.Sign(focusArea.velocity.z) && player.NavAgent.velocity.z != 0)
             {
                 lookAheadStoppedZ = false;
                 targetLookAheadZ = lookAheadDirZ * lookAheadDst;

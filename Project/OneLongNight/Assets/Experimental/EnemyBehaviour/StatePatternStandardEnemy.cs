@@ -177,8 +177,6 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
 
     public void SetUpEnemy()
     {
-
-
         currentMat = characterMesh.material;
 
         currentMat.mainTexture = materialTexs[(Random.Range(0, materialTexs.Length))];
@@ -310,8 +308,6 @@ public class StatePatternStandardEnemy : BaseMonoBehaviour
                     break;
                 }
             }
-            Debug.Log(result);
-
         }
     }
     

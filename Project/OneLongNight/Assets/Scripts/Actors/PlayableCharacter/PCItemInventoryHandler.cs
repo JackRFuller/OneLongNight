@@ -113,6 +113,7 @@ public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
         hasWeapon = true;
 
         EventManager.TriggerEvent(Events.NewWeaponPickup);
+        StatePatternPlayableCharacter.WeaponRange = item.weaponRange;
 
         OverrideAnimationClips();
     }
@@ -248,7 +249,9 @@ public class PCItemInventoryHandler : MonoSingleton<PCItemInventoryHandler>
         currentWeaponHandler = weaponHandlers[currentWeaponIndex];
 
         hasWeapon = true;
-        
+
+        StatePatternPlayableCharacter.WeaponRange = item.weaponRange;
+
         //Turn off Pickup
         foundItem.GetItem();
 

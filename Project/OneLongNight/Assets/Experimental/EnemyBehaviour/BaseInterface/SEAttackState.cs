@@ -26,6 +26,7 @@ public class SEAttackState : IEnemyState
         attackTimer = 2.1f;
         attackCount = 0;
 
+        enemy.transform.LookAt(enemy.Target);
         enemy.EnemyAnim.SetInteger("AttackCount", attackCount);
         enemy.EnemyAnim.SetBool("isAttacking", true);
     }
@@ -60,7 +61,7 @@ public class SEAttackState : IEnemyState
                         attackCount++;
                         if (attackCount > 1)
                             attackCount = 0;
-
+                        enemy.transform.LookAt(enemy.Target);
                         enemy.EnemyAnim.SetInteger("AttackCount", attackCount);
 
                     }

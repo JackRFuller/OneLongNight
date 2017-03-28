@@ -18,27 +18,11 @@ public class PCIdleState : IPlayableCharacterState
 
         player.PCAnimator.applyRootMotion = true;        
         player.PCAnimator.SetBool("IsMoving", false);
-        player.PCAnimator.SetBool("isBlocking", player.IsBlocking);
+        //player.PCAnimator.SetBool("isBlocking", player.IsBlocking);
     }
 
     public void OnUpdateState()
-    {
-        if(player.IsAttacking)
-        {
-            //Check We Have Enough Stamina
-            if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(PCItemInventoryHandler.CurrentWeapon.weaponAttackCosts[0]))
-            {
-                //Check if We Have Enough Stamina to Attack
-                OnExitState(player.attackState);
-            }
-        }        
-
-        //Check if Player is Picking Up An Item
-        if(player.IsPickingUp)
-        {
-            OnExitState(player.pickUpState);
-        }
-
+    {  
         if(player.HasTargetPosition)
         {
             OnExitState(player.moveState);

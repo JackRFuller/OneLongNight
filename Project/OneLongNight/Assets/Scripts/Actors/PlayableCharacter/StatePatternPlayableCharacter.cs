@@ -35,16 +35,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         }
     }
 
-    [Header("Movement")]
-    [SerializeField]
-    private Transform target;
-    public Transform Target
-    {
-        get
-        {
-            return target;
-        }
-    }
+    [Header("Camera")]    
     [SerializeField]
     private Transform cameraTarget;
     public Transform CameraTarget
@@ -53,8 +44,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         {
              return cameraTarget;
         }
-    }
-    public Transform targetHolder;
+    }   
 
     //Item Pickups================================================================
     [Header("Items")]
@@ -114,6 +104,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     }    
     public static Transform attackingEnemy;
     public static Vector3 hitDirection;
+    public static float WeaponRange;
 
     [Header("Blocking Attributes")]
     [SerializeField]
@@ -143,8 +134,20 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     //Inputs =========================================================================
     [SerializeField]
     private Transform targetMarker;
-    private Player player;
+        
     //Movement
+    private Transform enemyTarget;
+    public Transform EnemyTarget
+    {
+        get
+        {
+            return enemyTarget;
+        }
+        set
+        {
+            enemyTarget = value;
+        }
+    }
     private Vector3 targetPosition;
     public Vector3 TargetPosition
     {
@@ -176,65 +179,15 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         {
             hasTargetPosition = value;
         }
-    }
-    private int frameWait;
-
-    private Vector3 movementVector;
-    public Vector3 MovementVector
-    {
-        get
-        {
-            return movementVector;
-        }
-    }
-
-    private bool isBlocking;
-    public bool IsBlocking
-    {
-        get
-        {
-            return isBlocking;
-        }
-    }    
-
-    private bool isRolling;
-    public bool IsRolling
-    {
-        get
-        {
-            return isRolling;
-        }
-    }
-
-    private bool isAttacking;
-    public bool IsAttacking
-    {
-        get
-        {
-            return isAttacking;
-        }
-    }
-
-    private bool isPickingUp;
-    public bool IsPickingUp
-    {
-        get
-        {
-            return isPickingUp;
-        }
-    }
-
-    
+    }  
 
     private void OnEnable()
     {
-        EventManager.StartListening(Events.PlayerStaggered, PlayerIsStaggered);
         EventManager.StartListening(Events.PlayerDied, PlayerHasDied);
     }
 
     private void OnDisable()
     {
-        EventManager.StopListening(Events.PlayerStaggered, PlayerIsStaggered);
         EventManager.StopListening(Events.PlayerDied, PlayerHasDied);
     }
 
@@ -243,12 +196,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         //Get Components
         pcAnimator = this.GetComponent<Animator>();
         navAgent = this.GetComponent<NavMeshAgent>();
-
-        player = ReInput.players.GetPlayer(0);
-
-        //Movement
-        target.position = this.transform.position;
-
+       
         //Get States - Movement
         idleState = new PCIdleState(this);
         moveState = new PCMoveState(this);
@@ -278,7 +226,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 			currentState.OnEnterState();
 
 			lastState = currentState;
-            Debug.Log("New State " + currentState);
+            //Debug.Log("New State " + currentState);
 		}
 		else
 		{
@@ -286,12 +234,7 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 				currentState.OnUpdateState();
 		}
     }
-
-    private void PlayerIsStaggered()
-    {
-        currentState = staggerState;
-    } 
-
+    
     private void PlayerHasDied()
     {
         currentState = deathState;
@@ -300,29 +243,31 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     public void HitByEnemy(HitInfo hitInfo)
     {
         attacker = hitInfo.attacker;
+        enemyTarget = null;
+        hasTargetPosition = false;
+        hasPickupTarget = false;
+        HurtByEnemy(hitInfo);
 
-        //Check if We're Blocking
-        if(isBlocking)
-        {
-            //Check if Attacker is in field of view
-            if(CanBlock())
-            {
-                Debug.Log("Blocked Successfully");
-                CameraScreenShake.Instance.TestShake();
-                attacker.SendMessage("BlockedByEnemy", SendMessageOptions.DontRequireReceiver);
-                pcAnimator.SetTrigger("hasBlocked");
-            }
-            else
-            {
-                HurtByEnemy(hitInfo);
-            }
-        }
-        else
-        {
-            HurtByEnemy(hitInfo);
-        }
-
-       
+        ////Check if We're Blocking
+        //if (isBlocking)
+        //{
+        //    //Check if Attacker is in field of view
+        //    if(CanBlock())
+        //    {
+        //        Debug.Log("Blocked Successfully");
+        //        CameraScreenShake.Instance.TestShake();
+        //        attacker.SendMessage("BlockedByEnemy", SendMessageOptions.DontRequireReceiver);
+        //        pcAnimator.SetTrigger("hasBlocked");
+        //    }
+        //    else
+        //    {
+        //        HurtByEnemy(hitInfo);
+        //    }
+        //}
+        //else
+        //{
+            
+        //}
     }
 
     /// <summary>
@@ -340,14 +285,13 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
         if (PCAttributes.Health <= 0)
         {
             EventManager.TriggerEvent(Events.PlayerDied);
-
             this.GetComponent<Collider>().enabled = false;
         }
         else
         {
             hitDirection = hitInfo.hitDirection;
             attackingEnemy = hitInfo.attacker;
-
+            currentState = staggerState;
             EventManager.TriggerEvent(Events.PlayerStaggered);
         }
     }
@@ -434,6 +378,16 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
                         hasPickupTarget = true;
                         PCItemInventoryHandler.foundItem = hit.collider.GetComponent<ItemPickup>();
                     }
+
+                    enemyTarget = null;
+                }
+                else if(hit.collider.tag == "Enemy")
+                {
+                    if(currentState != attackState)
+                    {
+                        enemyTarget = hit.transform;
+                        HasTargetPosition = true;
+                    }
                 }
             }
 
@@ -444,47 +398,33 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
                 if(hit.collider.tag == "Ground")
                 {
                     //If We're Not Currently Rolling
-                    if(currentState != rollState)
+                    if(currentState != rollState && currentState != staggerState)
                     {
                         //If We've got enough Stamina
                         if(PCAttributes.Instance.CheckIfPCHasEnoughStamina(rollAction.ActionCost))
                         {
-                            targetPosition = new Vector3(hit.point.x,
-                                                 this.transform.position.y,
-                                                 hit.point.z);
-                            CurrentState = rollState;
+                            if(currentState == attackState)
+                            {
+                                if(PCItemInventoryHandler.CurrentWeapon.weaponWeight == ItemData.WeaponWeight.Light)
+                                {
+                                    targetPosition = new Vector3(hit.point.x,
+                                                this.transform.position.y,
+                                                hit.point.z);
+                                    CurrentState = rollState;
+                                }
+                            }
+                            else
+                            {
+                                targetPosition = new Vector3(hit.point.x,
+                                                this.transform.position.y,
+                                                hit.point.z);
+                                CurrentState = rollState;
+                            }
                         }
                     }
                 }
             }
         }
-    }
-
-    private void GetInputs()
-    {
-        if(CurrentState != deathState)
-        {            
-            GetMovementInput();
-
-            GetUseItemInput();
-
-            GetAttackInput();
-
-            GetRollInput();
-
-            GetPickUpInput();
-
-            GetBlockInput();
-        }
-    }
-
-    private void GetMovementInput()
-    {
-        //Get Directional Movement
-        float x = Input.GetAxisRaw("Horizontal");
-        float z = Input.GetAxisRaw("Vertical");
-
-        movementVector = new Vector3(x, 0, z);
     }
 
     private void GetUseItemInput()
@@ -504,82 +444,6 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
                     PCItemInventoryHandler.Instance.UsedHealthPotion();
                 }
             }
-        }
-    }
-
-    private void GetAttackInput()
-    {
-        //Get Combat Input & Check We're not Rolling or Picking Up
-        if (player.GetButton("Attack") || Input.GetMouseButton(0))
-        {
-            if (CurrentState != rollState && CurrentState != pickUpState)
-            {
-                CurrentState = attackState;
-                isAttacking = true;
-            }
-            else
-            {
-                isAttacking = false;
-            }
-        }
-        else
-        {
-            isAttacking = false;
-        }
-    }
-
-    private void GetPickUpInput()
-    {
-        //Get Pickup Input
-        if (player.GetButtonDown("Interact"))
-        {
-            if (PCItemInventoryHandler.PickUpFinished)
-            {
-                if (PCItemInventoryHandler.foundItem)
-                {
-                    if(CurrentState != pickUpState && CurrentState != rollState && CurrentState != attackState && CurrentState != staggerState)
-                    {
-                        CurrentState = pickUpState;
-                        itemHandler.PickUpItem();
-                    }                    
-                }
-            }
-        }
-        else
-        {
-            isPickingUp = false;
-        }
-    }
-
-    private void GetRollInput()
-    {
-        //Get Roll Input
-        if (player.GetButtonDown("Roll"))
-        {
-            if (CurrentState != attackState && CurrentState != staggerState && CurrentState != pickUpState && CurrentState != rollState)
-            {
-                CurrentState = rollState;
-            }
-        }
-    }
-
-    private void GetBlockInput()
-    {
-        //Get Block Input
-        if (hasShield)
-        {
-            if (player.GetButton("Block") || Input.GetMouseButton(1))
-            {
-                isBlocking = true;
-            }
-            else
-            {
-                isBlocking = false;
-            }
-        }
-        else
-        {
-            isBlocking = false;
         }
     }
 

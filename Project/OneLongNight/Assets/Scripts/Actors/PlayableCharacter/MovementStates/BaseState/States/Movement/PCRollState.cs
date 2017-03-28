@@ -10,11 +10,20 @@ public class PCRollState : IPlayableCharacterState
         player = pcStateController;
     }
 
-    private const float timerStartTime = 1.1f;
+    private const float timerStartTime = 1.0f;
     private float timer;
 
     public void OnEnterState()
     {
+        //TUrn Off Any Other Animations
+        for(int i = 0; i < player.PCAnimator.parameterCount; i++)
+        {
+            if(player.PCAnimator.parameters[i].type == AnimatorControllerParameterType.Bool)
+            {
+                player.PCAnimator.SetBool(player.PCAnimator.parameters[i].name, false);
+            }
+        }
+
         player.HasTargetPosition = false;
         player.NavAgent.Stop();
 

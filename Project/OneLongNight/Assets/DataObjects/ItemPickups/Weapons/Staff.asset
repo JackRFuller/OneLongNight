@@ -28,6 +28,7 @@ MonoBehaviour:
   - 0
   weaponDurability: 100000
   criticalHitDamage: 0
+  weaponRange: 1.5
   shieldIndex: 0
   shieldDurability: 0
   movementAnimations: {fileID: 11400000, guid: 22302329f51f6c14e856e9900818fe45, type: 2}

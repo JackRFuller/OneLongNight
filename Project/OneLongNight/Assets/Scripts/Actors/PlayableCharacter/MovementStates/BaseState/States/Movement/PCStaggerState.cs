@@ -9,7 +9,6 @@ public class PCStaggerState : IPlayableCharacterState
     {
         player = pcStateController;
     }
-
     private float staggerCooldownTimer;
 
     public void OnEnterState()
@@ -30,29 +29,9 @@ public class PCStaggerState : IPlayableCharacterState
                 
 
         player.transform.LookAt(lookAtPos);
-
-        Vector3 rotation = player.transform.eulerAngles;
-
-        rotation = new Vector3(rotation.x, rotation.y - 45, rotation.z);
-
-        player.transform.eulerAngles = rotation;
-
-        //Work Out Direction of Hit3
-        Vector3 relativehit = StatePatternPlayableCharacter.hitDirection;
-
-        //Determine Hit Direction            
-        relativehit = player.transform.InverseTransformPoint(relativehit);
-
-        int staggeredDirection = 0;
-
-        if (relativehit.x < 0)
-            staggeredDirection = 0;
-
-        if (relativehit.x >= 0)
-            staggeredDirection = 1;
-
+        player.PCAnimator.applyRootMotion = true;
         //Set Stagger Direction
-        player.PCAnimator.SetFloat("StaggeredDirection", staggeredDirection);
+        //player.PCAnimator.SetFloat("StaggeredDirection", staggeredDirection);
 
         //Enable Stagger State
         player.PCAnimator.SetBool("isStaggered", true);
@@ -69,36 +48,14 @@ public class PCStaggerState : IPlayableCharacterState
         }
         else
         {
-            //Check for Attack
-            if (player.IsAttacking)
+            if(player.HasTargetPosition || player.HasPickupTarget || player.EnemyTarget)
             {
-                //Check We Have Enough Stamina
-                if (PCAttributes.Instance.CheckIfPCHasEnoughStamina(PCItemInventoryHandler.CurrentWeapon.weaponAttackCosts[0]))
-                {
-                    //Check if We Have Enough Stamina to Attack
-                    OnExitState(player.attackState);
-                }
-            }
-
-            //Check if We're Picking Up Items
-            if (player.IsPickingUp)
-            {
-                player.PCAnimator.SetBool("isPickingUp", true);
-                OnExitState(player.pickUpState);
+                OnExitState(player.moveState);
             }
             else
             {
-                //Check we're not standing still
-                if (player.MovementVector != Vector3.zero)
-                {
-                    OnExitState(player.moveState);
-                }
-                else
-                {
-                    OnExitState(player.idleState);
-                }
+                OnExitState(player.idleState);
             }
-           
         }
     }
 

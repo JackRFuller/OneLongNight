@@ -9,6 +9,6 @@ public class AnimationCombatStateHandler : StateMachineBehaviour
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        PCAttackState.InitiateAttack(stateInfo.length);
+        PCAttackState.InitiateAttack(stateInfo.length);        
     }
 }

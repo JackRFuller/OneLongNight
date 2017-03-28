@@ -16,6 +16,7 @@ public class ItemData : ScriptableObject
     public float[] weaponAttackCosts = new float[4];
     public int weaponDurability; //Defines how many attacks a weapon can make before it breaks;
     public float criticalHitDamage; //Defines how much damage 
+    public float weaponRange; //How close the player has to get to use the weapon
 
     [Header("If Shield")]
     public int shieldIndex;
