@@ -16,9 +16,9 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 	// Use this for initialization
 	void Start ()
     {
-        SpawnInEnemies();
+        //SpawnInEnemies();
 
-        StartCoroutine(SetEnemiesToSpawns());
+        //StartCoroutine(SetEnemiesToSpawns());
 	}
 
     private void SpawnInEnemies()

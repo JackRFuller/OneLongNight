@@ -106,6 +106,9 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
     public static Transform attackingEnemy;
     public static Vector3 hitDirection;
 
+    //Enemies
+    private List<Transform> closestEnemies = new List<Transform>();
+
     [Header("Blocking Attributes")]
     [SerializeField]
     private float viewRadius;
@@ -239,7 +242,45 @@ public class StatePatternPlayableCharacter : BaseMonoBehaviour
 			if(currentState != null)
 				currentState.OnUpdateState();
 		}
+
+        GetClosestEnemies();
     }
+
+    private void GetClosestEnemies()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10.0f,targetMask);
+        for(int i = 0; i < hitColliders.Length; i++)
+        {
+            //Add Closest Enemies
+            
+            if (!closestEnemies.Contains(hitColliders[i].transform) || closestEnemies.Count == 0)
+            {
+                closestEnemies.Add(hitColliders[i].transform);
+            }
+            
+        }
+
+        //Remove any enemies that are too far away
+        for(int i = 0; i < closestEnemies.Count; i++)
+        {
+            bool isInList = false;
+
+            for(int j = 0; j < hitColliders.Length; j++)
+            {
+                if(closestEnemies[i] == hitColliders[j].transform)
+                {
+                    isInList = true;
+                }
+            }
+
+            if(!isInList)
+            {
+                closestEnemies.RemoveAt(i);
+            }
+        }
+       
+    }
+
 
     private void PlayerIsStaggered()
     {
